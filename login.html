@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>DWC Study - Advanced Login</title>
+  
+  <!-- Font Awesome Icons & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. ADVANCED PURPLE-PINK VIBRANT THEME VARIABLES
+       ========================================================================== */
+    :root {
+      --primary-gradient: linear-gradient(135deg, #7c3aed 0%, #d946ef 100%);
+      --accent-gradient: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+      --primary-color: #8b5cf6;
+      --pink-color: #ec4899;
+      --purple-dark: #2e1065;
+      --purple-light: #f5f3ff;
+      --pink-light: #fdf2f8;
+      --border-color: #f0abfc;
+      --input-bg: rgba(255, 255, 255, 0.95);
+      --card-bg: #ffffff;
+      --text-main: #1e1b4b;
+      --text-muted: #64748b;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --shadow-glow: 0 10px 30px -5px rgba(217, 70, 239, 0.3);
+      --shadow-card: 0 20px 40px -15px rgba(124, 58, 237, 0.12);
+      --font-heading: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-body);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(180deg, #f3e8ff 0%, #fce7f3 50%, #f5f3ff 100%);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 16px 0;
+    }
+
+    .app-screen {
+      width: 100%;
+      max-width: 440px;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+
+    /* ==========================================================================
+       2. TOP CENTER TOAST NOTIFICATION
+       ========================================================================== */
+    .toast-container-center {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      width: 90%;
+      max-width: 400px;
+      pointer-events: none;
+    }
+
+    .toast-msg {
+      pointer-events: auto;
+      background: var(--primary-gradient);
+      color: #ffffff;
+      padding: 14px 20px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 12px 30px rgba(124, 58, 237, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: slideDownCenter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      backdrop-filter: blur(10px);
+    }
+
+    .toast-msg.error {
+      background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);
+      box-shadow: 0 12px 30px rgba(225, 29, 72, 0.35);
+    }
+
+    @keyframes slideDownCenter {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       3. TOP NAVIGATION & LANGUAGE SELECTOR
+       ========================================================================== */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-icon-back {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      color: var(--purple-dark);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .lang-selector-wrapper { position: relative; }
+
+    .lang-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--purple-dark);
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(217, 70, 239, 0.15);
+    }
+
+    .lang-dropdown {
+      position: absolute;
+      top: 110%;
+      right: 0;
+      width: 190px;
+      max-height: 240px;
+      overflow-y: auto;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: 0 15px 35px rgba(124, 58, 237, 0.2);
+      display: none;
+      z-index: 100;
+    }
+
+    .lang-dropdown.show { display: block; }
+
+    .lang-option {
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #334155;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+    }
+
+    .lang-option:hover {
+      background: var(--pink-light);
+      color: var(--pink-color);
+    }
+
+    /* ==========================================================================
+       4. HERO BANNER WITH LOGO & ILLUSTRATION
+       ========================================================================== */
+    .hero-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .circle-logo-container {
+      position: relative;
+      width: 52px;
+      height: 52px;
+      flex-shrink: 0;
+    }
+
+    .brand-logo-icon {
+      width: 100%;
+      height: 100%;
+      background: var(--primary-gradient);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-glow);
+      overflow: hidden;
+      border: 3px solid #ffffff;
+    }
+
+    .brand-logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-tagline {
+      font-size: 10px;
+      color: var(--pink-color);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .main-heading {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--purple-dark);
+      line-height: 1.2;
+    }
+
+    .main-heading span {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .main-subheading {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .hero-illustration {
+      width: 130px;
+      height: 120px;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       5. MAIN FORM CARD
+       ========================================================================== */
+    .form-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 22px 18px;
+      border: 1.5px solid rgba(240, 171, 252, 0.4);
+      box-shadow: var(--shadow-card);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .section-icon-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--purple-dark);
+    }
+
+    .section-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .form-group { margin-bottom: 14px; }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: var(--pink-light);
+      border: 1.5px solid transparent;
+      border-radius: var(--radius-md);
+      height: 48px;
+      padding: 0 14px;
+      transition: all 0.25s ease;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--pink-color);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.15);
+    }
+
+    .input-wrapper i.leading-icon {
+      color: var(--primary-color);
+      font-size: 15px;
+      margin-right: 10px;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--purple-dark);
+    }
+
+    .toggle-password {
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 4px;
+    }
+
+    .login-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      font-size: 11px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .remember-me input { accent-color: var(--pink-color); }
+
+    .forgot-pass {
+      color: var(--pink-color);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .btn-submit {
+      width: 100%;
+      height: 50px;
+      background: var(--primary-gradient);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: var(--shadow-glow);
+      transition: transform 0.1s ease;
+    }
+
+    .btn-submit:active { transform: scale(0.98); }
+
+    .divider-box {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .divider-line { flex: 1; height: 1px; background: #e2e8f0; }
+    .divider-text { padding: 0 10px; font-size: 11px; font-weight: 700; color: #94a3b8; }
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-social {
+      height: 44px;
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--purple-dark);
+      cursor: pointer;
+    }
+
+    /* OTP Bottom Sheet Modal */
+    .otp-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 27, 75, 0.6);
+      backdrop-filter: blur(5px);
+      z-index: 9000;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .otp-modal-overlay.active { display: flex; }
+
+    .otp-modal-card {
+      width: 100%;
+      max-width: 440px;
+      background: #ffffff;
+      border-radius: 24px 24px 0 0;
+      padding: 24px;
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+      animation: slideUpModal 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+    .otp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .otp-title { font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: var(--purple-dark); }
+    .btn-close-modal { width: 30px; height: 30px; border-radius: 50%; background: var(--pink-light); border: none; color: var(--pink-color); cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+    .otp-inputs-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 18px 0; }
+    .otp-box { height: 48px; border: 2px solid var(--border-color); border-radius: 10px; text-align: center; font-size: 18px; font-weight: 800; color: var(--purple-dark); outline: none; background: var(--pink-light); }
+    .otp-box:focus { border-color: var(--pink-color); background: #ffffff; }
+
+    .register-footer-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .register-footer-link a {
+      color: var(--pink-color);
+      font-weight: 800;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Center Toast Container -->
+  <div class="toast-container-center" id="toastContainer"></div>
+
+  <div class="app-screen">
+    
+    <!-- Top Nav with Languages -->
+    <div class="top-nav">
+      <button class="btn-icon-back" onclick="window.history.back()"><i class="fa-solid fa-arrow-left"></i></button>
+
+      <div class="lang-selector-wrapper">
+        <div class="lang-selector" id="langSelectorBtn">
+          <i class="fa-solid fa-globe"></i>
+          <span id="currentLangText">English</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="lang-dropdown" id="langDropdown">
+          <div class="lang-option" onclick="changeLanguage('en', 'English')">English <span>EN</span></div>
+          <div class="lang-option" onclick="changeLanguage('hi', 'हिंदी')">हिंदी (Hindi) <span>HI</span></div>
+          <div class="lang-option" onclick="changeLanguage('mr', 'मराठी')">मराठी (Marathi) <span>MR</span></div>
+          <div class="lang-option" onclick="changeLanguage('gu', 'ગુજરાતી')">ગુજરાતી (Gujarati) <span>GU</span></div>
+          <div class="lang-option" onclick="changeLanguage('bn', 'বাংলা')">বাংলা (Bengali) <span>BN</span></div>
+          <div class="lang-option" onclick="changeLanguage('ta', 'தமிழ்')">தமிழ் (Tamil) <span>TA</span></div>
+          <div class="lang-option" onclick="changeLanguage('te', 'తెలుగు')">తెలుగు (Telugu) <span>TE</span></div>
+          <div class="lang-option" onclick="changeLanguage('kn', 'ಕನ್ನಡ')">ಕನ್ನಡ (Kannada) <span>KN</span></div>
+          <div class="lang-option" onclick="changeLanguage('bho', 'भोजपुरी')">भोजपुरी (Bhojpuri) <span>BHO</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div style="flex: 1;">
+        <div class="brand-header">
+          <div class="circle-logo-container">
+            <div class="brand-logo-icon">
+              <img src="logo.png" alt="DWC Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+              <i class="fa-solid fa-graduation-cap" style="display:none; color: #ffffff; font-size: 22px;"></i>
+            </div>
+          </div>
+          <div>
+            <div class="brand-title">DWC Study</div>
+            <div class="brand-tagline">Learn & Grow</div>
+          </div>
+        </div>
+        
+        <h1 class="main-heading">Welcome <span>Back!</span></h1>
+        <p class="main-subheading">Sign in with Mobile or Email ID to access your dashboard.</p>
+      </div>
+
+      <!-- Vector Illustration SVG -->
+      <svg class="hero-illustration" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="100" cy="90" r="70" fill="#f472b6" opacity="0.15"/>
+        <path d="M60 140 C60 110 80 95 100 95 C120 95 140 110 140 140" stroke="#8b5cf6" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="100" cy="65" r="22" fill="#ec4899"/>
+        <path d="M125 50 L145 35 L145 65 Z" fill="#d946ef"/>
+        <circle cx="145" cy="35" r="5" fill="#7c3aed"/>
+        <path d="M45 75 L70 60 L95 75 L70 90 Z" fill="#8b5cf6"/>
+      </svg>
+    </div>
+
+    <!-- Login Form Card -->
+    <div class="form-card">
+      
+      <div class="section-header">
+        <div class="section-icon-badge">
+          <i class="fa-solid fa-right-to-bracket"></i>
+        </div>
+        <div>
+          <div class="section-title">Account Login</div>
+          <div class="section-subtitle">Enter your Mobile/Email and Password</div>
+        </div>
+      </div>
+
+      <form id="loginForm">
+        
+        <!-- Mobile or Email Field -->
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="fa-solid fa-user leading-icon"></i>
+            <input type="text" id="loginUserInput" placeholder="Mobile Number or Email ID" required />
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock leading-icon"></i>
+            <input type="password" id="loginPassword" placeholder="Enter Password" required />
+            <i class="fa-solid fa-eye toggle-password" id="togglePasswordBtn"></i>
+          </div>
+        </div>
+
+        <!-- Options: Remember Me & Forgot Password -->
+        <div class="login-options">
+          <label class="remember-me">
+            <input type="checkbox" id="rememberMe" />
+            <span>Remember Me</span>
+          </label>
+          <a href="#" class="forgot-pass" id="btnForgotPass">Forgot Password?</a>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit" id="btnLogin">
+          <span>SIGN IN</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+
+      </form>
+
+      <!-- Social Login Separator -->
+      <div class="divider-box">
+        <div class="divider-line"></div>
+        <div class="divider-text">OR SIGN IN WITH</div>
+        <div class="divider-line"></div>
+      </div>
+
+      <!-- Social Buttons -->
+      <div class="social-grid">
+        <button class="btn-social" id="btnOtpTrigger">
+          <i class="fa-solid fa-mobile-screen-button" style="color: #ec4899; font-size: 16px;"></i>
+          <span>OTP Login</span>
+        </button>
+        <button class="btn-social" id="btnGoogleLogin">
+          <i class="fa-brands fa-google" style="color: #ea4335; font-size: 16px;"></i>
+          <span>Google</span>
+        </button>
+      </div>
+
+      <!-- Link to Register Page -->
+      <div class="register-footer-link">
+        Don't have an account? <a href="index.html">Register Now</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- 6-DIGIT OTP FOOTER MODAL FORM -->
+  <div class="otp-modal-overlay" id="otpModal">
+    <div class="otp-modal-card">
+      <div class="otp-header">
+        <div class="otp-title"><i class="fa-solid fa-shield-halved" style="color: var(--pink-color);"></i> Verify 6-Digit OTP</div>
+        <button class="btn-close-modal" id="btnCloseOtp">✕</button>
+      </div>
+      
+      <p style="font-size: 12px; color: var(--text-muted);" id="otpSubText">Enter 6-digit OTP sent to your registered mobile/email.</p>
+
+      <div class="otp-inputs-grid">
+        <input type="text" maxlength="1" class="otp-box" />
+        <input type="text" maxlength="1" class="otp-box" />
+        <input type="text" maxlength="1" class="otp-box" />
+        <input type="text" maxlength="1" class="otp-box" />
+        <input type="text" maxlength="1" class="otp-box" />
+        <input type="text" maxlength="1" class="otp-box" />
+      </div>
+
+      <button class="btn-submit" id="btnVerifyOtp">Verify & Continue</button>
+    </div>
+  </div>
+
+  <!-- Firebase Modular SDK & Functional Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // Firebase Config (thar-e5879)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAHw2ceBKirLjpBx0soxJD0GHWwXnrxo4Y",
+      authDomain: "thar-e5879.firebaseapp.com",
+      databaseURL: "https://thar-e5879-default-rtdb.firebaseio.com",
+      projectId: "thar-e5879",
+      storageBucket: "thar-e5879.firebasestorage.app",
+      messagingSenderId: "1004657134263",
+      appId: "1:1004657134263:web:a2d8844554000981659b32"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // 1. Toast Alert Function
+    window.showToast = function(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      container.innerHTML = '';
+
+      const toast = document.createElement('div');
+      toast.className = `toast-msg ${type === 'error' ? 'error' : ''}`;
+      
+      const iconClass = type === 'error' ? 'fa-circle-xmark' : 'fa-circle-check';
+      toast.innerHTML = `<i class="fa-solid ${iconClass}" style="font-size: 16px;"></i> <span>${message}</span>`;
+
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.animation = 'slideDownCenter 0.3s ease reverse forwards';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    };
+
+    // 2. Language Selector
+    const langBtn = document.getElementById('langSelectorBtn');
+    const langDropdown = document.getElementById('langDropdown');
+
+    langBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', () => {
+      langDropdown.classList.remove('show');
+    });
+
+    window.changeLanguage = function(code, name) {
+      document.getElementById('currentLangText').innerText = name;
+      langDropdown.classList.remove('show');
+      showToast(`Language changed to ${name}`, 'success');
+    };
+
+    // 3. Password Toggle
+    document.getElementById('togglePasswordBtn').addEventListener('click', function() {
+      const passInput = document.getElementById('loginPassword');
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+        this.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        passInput.type = 'password';
+        this.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    });
+
+    // 4. Role Redirection Logic
+    function redirectUser(role) {
+      showToast(`Verified! Redirecting to ${role.toUpperCase()} Dashboard...`, 'success');
+      setTimeout(() => {
+        if (role === 'student') window.location.href = 'student.html';
+        else if (role === 'teacher') window.location.href = 'teacher.html';
+        else if (role === 'other') window.location.href = 'otheruser.html';
+        else window.location.href = 'student.html';
+      }, 1500);
+    }
+
+    // 5. Dual-Login Handler (Mobile OR Email + Password)
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const userInput = document.getElementById('loginUserInput').value.trim();
+      const pass = document.getElementById('loginPassword').value.trim();
+      const btn = document.getElementById('btnLogin');
+
+      btn.innerText = "Verifying...";
+      btn.disabled = true;
+
+      try {
+        const dbRef = ref(db);
+        const snapshot = await get(child(dbRef, `users`));
+
+        if (snapshot.exists()) {
+          const users = snapshot.val();
+          let matchedUser = null;
+
+          // Check by Mobile Key or Email Property inside user object
+          for (let key in users) {
+            const user = users[key];
+            if (key === userInput || user.mobile === userInput || (user.email && user.email.toLowerCase() === userInput.toLowerCase())) {
+              matchedUser = user;
+              break;
+            }
+          }
+
+          if (matchedUser) {
+            if (matchedUser.password === pass) {
+              redirectUser(matchedUser.role || 'student');
+            } else {
+              showToast("Incorrect Password!", "error");
+              btn.innerHTML = '<span>SIGN IN</span> <i class="fa-solid fa-arrow-right"></i>';
+              btn.disabled = false;
+            }
+          } else {
+            showToast("No account found with this Mobile or Email!", "error");
+            btn.innerHTML = '<span>SIGN IN</span> <i class="fa-solid fa-arrow-right"></i>';
+            btn.disabled = false;
+          }
+        } else {
+          showToast("No user records found!", "error");
+          btn.innerHTML = '<span>SIGN IN</span> <i class="fa-solid fa-arrow-right"></i>';
+          btn.disabled = false;
+        }
+      } catch (err) {
+        showToast("Firebase Error: " + err.message, "error");
+        btn.innerHTML = '<span>SIGN IN</span> <i class="fa-solid fa-arrow-right"></i>';
+        btn.disabled = false;
+      }
+    });
+
+    // 6. OTP Modal Trigger
+    document.getElementById('btnOtpTrigger').addEventListener('click', () => {
+      const userInput = document.getElementById('loginUserInput').value.trim();
+      if (!userInput) {
+        showToast("Please enter Mobile or Email first!", "error");
+        return;
+      }
+
+      showToast(`6-Digit OTP sent to ${userInput}`, 'success');
+      document.getElementById('otpSubText').innerText = `OTP sent to: ${userInput}`;
+      document.getElementById('otpModal').classList.add('active');
+    });
+
+    document.getElementById('btnCloseOtp').addEventListener('click', () => {
+      document.getElementById('otpModal').classList.remove('active');
+    });
+
+    document.getElementById('btnVerifyOtp').addEventListener('click', async () => {
+      const boxes = document.querySelectorAll('.otp-box');
+      let otpVal = "";
+      boxes.forEach(b => otpVal += b.value);
+
+      if (otpVal.length < 6) {
+        showToast("Enter full 6-digit OTP", "error");
+        return;
+      }
+
+      const userInput = document.getElementById('loginUserInput').value.trim();
+      document.getElementById('otpModal').classList.remove('active');
+
+      try {
+        const dbRef = ref(db);
+        const snapshot = await get(child(dbRef, `users`));
+
+        if (snapshot.exists()) {
+          const users = snapshot.val();
+          let matchedUser = null;
+
+          for (let key in users) {
+            const user = users[key];
+            if (key === userInput || user.mobile === userInput || (user.email && user.email.toLowerCase() === userInput.toLowerCase())) {
+              matchedUser = user;
+              break;
+            }
+          }
+
+          redirectUser(matchedUser ? matchedUser.role : 'student');
+        } else {
+          redirectUser('student');
+        }
+      } catch (err) {
+        redirectUser('student');
+      }
+    });
+
+    const boxes = document.querySelectorAll('.otp-box');
+    boxes.forEach((box, idx) => {
+      box.addEventListener('keyup', (e) => {
+        if (box.value.length === 1 && idx < 5) boxes[idx + 1].focus();
+      });
+    });
+
+    // 7. Dummy Actions
+    document.getElementById('btnForgotPass').addEventListener('click', (e) => {
+      e.preventDefault();
+      showToast('Reset password link sent to registered email/phone!', 'success');
+    });
+
+    document.getElementById('btnGoogleLogin').addEventListener('click', () => {
+      showToast('Google Login Initiated...', 'success');
+    });
+  </script>
+</body>
+</html>

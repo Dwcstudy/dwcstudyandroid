@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>DWC Study - Master Admin Panel</title>
+
+  <!-- Font Awesome Icons & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(135deg, #7c3aed 0%, #d946ef 100%);
+      --accent-gradient: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+      --primary-color: #8b5cf6;
+      --pink-color: #ec4899;
+      --purple-dark: #2e1065;
+      --pink-light: #fdf2f8;
+      --border-color: #f0abfc;
+      --card-bg: #ffffff;
+      --text-main: #1e1b4b;
+      --text-muted: #64748b;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --shadow-glow: 0 10px 30px -5px rgba(217, 70, 239, 0.3);
+      --shadow-card: 0 20px 40px -15px rgba(124, 58, 237, 0.12);
+      --font-heading: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-body); -webkit-tap-highlight-color: transparent; }
+    body { background: linear-gradient(180deg, #f3e8ff 0%, #fce7f3 50%, #f5f3ff 100%); color: var(--text-main); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 12px 0; }
+
+    .admin-screen { width: 100%; max-width: 500px; padding: 10px; display: flex; flex-direction: column; gap: 14px; }
+
+    /* Toast Notification */
+    .toast-container-center { position: fixed; top: 15px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%; max-width: 400px; pointer-events: none; }
+    .toast-msg { pointer-events: auto; background: var(--primary-gradient); color: #ffffff; padding: 12px 18px; border-radius: var(--radius-md); box-shadow: 0 12px 30px rgba(124, 58, 237, 0.4); display: flex; align-items: center; justify-content: center; gap: 10px; font-family: var(--font-heading); font-size: 13px; font-weight: 700; border: 1px solid rgba(255, 255, 255, 0.3); animation: slideDown 0.3s ease forwards; }
+    .toast-msg.error { background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%); }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Header Panel */
+    .admin-header { background: #ffffff; padding: 16px; border-radius: var(--radius-lg); border: 1.5px solid var(--border-color); box-shadow: var(--shadow-card); display: flex; align-items: center; justify-content: space-between; }
+    .header-info { display: flex; align-items: center; gap: 12px; }
+    .admin-avatar { width: 46px; height: 46px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 18px; box-shadow: var(--shadow-glow); }
+    .admin-title { font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: var(--purple-dark); }
+    .admin-sub { font-size: 11px; color: var(--pink-color); font-weight: 700; text-transform: uppercase; }
+
+    /* Stat Cards */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat-card { background: #ffffff; padding: 10px 6px; border-radius: var(--radius-md); border: 1px solid var(--border-color); text-align: center; box-shadow: var(--shadow-card); }
+    .stat-val { font-family: var(--font-heading); font-size: 17px; font-weight: 800; color: var(--purple-dark); }
+    .stat-lbl { font-size: 10px; color: var(--text-muted); font-weight: 700; }
+
+    /* Search & Filters */
+    .controls-card { background: #ffffff; padding: 12px; border-radius: var(--radius-lg); border: 1.5px solid var(--border-color); display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow-card); }
+    .search-box { display: flex; align-items: center; background: var(--pink-light); border-radius: var(--radius-md); height: 40px; padding: 0 12px; border: 1px solid transparent; }
+    .search-box:focus-within { border-color: var(--pink-color); background: #ffffff; }
+    .search-box i { color: var(--primary-color); margin-right: 8px; }
+    .search-box input { border: none; outline: none; background: transparent; width: 100%; font-size: 12px; font-weight: 600; color: var(--purple-dark); }
+
+    .filter-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+    .tab-btn { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1px solid var(--border-color); background: #ffffff; color: var(--purple-dark); cursor: pointer; white-space: nowrap; }
+    .tab-btn.active { background: var(--primary-gradient); color: #ffffff; border-color: transparent; }
+
+    /* Table Container */
+    .table-card { background: #ffffff; border-radius: var(--radius-lg); border: 1.5px solid var(--border-color); padding: 12px; box-shadow: var(--shadow-card); overflow: hidden; }
+    .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; border-collapse: collapse; min-width: 620px; text-align: left; }
+    th { background: var(--pink-light); color: var(--purple-dark); font-family: var(--font-heading); font-size: 10px; font-weight: 800; padding: 10px 8px; border-bottom: 1px solid var(--border-color); text-transform: uppercase; }
+    td { padding: 10px 8px; font-size: 11px; font-weight: 600; color: var(--text-main); border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+
+    /* Badges */
+    .role-badge { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 9px; font-weight: 800; text-transform: uppercase; }
+    .role-student { background: #e0e7ff; color: #4338ca; }
+    .role-teacher { background: #fce7f3; color: #be185d; }
+    .role-other { background: #fef3c7; color: #b45309; }
+
+    .status-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 800; cursor: pointer; }
+    .status-active { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .status-disabled { background: #ffe4e6; color: #b91c1c; border: 1px solid #fca5a5; }
+
+    .badge-count { background: var(--primary-gradient); color: #ffffff; padding: 2px 7px; border-radius: 8px; font-weight: 800; font-size: 10px; }
+
+    /* Action Buttons */
+    .btn-action { width: 28px; height: 28px; border-radius: 50%; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; transition: transform 0.1s; }
+    .btn-action:active { transform: scale(0.9); }
+    .btn-view { background: var(--pink-light); color: var(--pink-color); }
+    .btn-del { background: #ffe4e6; color: #e11d48; margin-left: 2px; }
+
+    /* Modal Styling */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(30, 27, 75, 0.6); backdrop-filter: blur(4px); z-index: 9000; display: none; align-items: center; justify-content: center; padding: 16px; }
+    .modal-overlay.active { display: flex; }
+    .modal-card { width: 100%; max-width: 420px; background: #ffffff; border-radius: var(--radius-lg); padding: 18px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); border: 1.5px solid var(--border-color); max-height: 85vh; overflow-y: auto; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; }
+    .modal-title { font-family: var(--font-heading); font-size: 15px; font-weight: 800; color: var(--purple-dark); }
+    
+    .data-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #f1f5f9; font-size: 12px; }
+    .data-label { color: var(--text-muted); font-weight: 600; }
+    .data-val { color: var(--purple-dark); font-weight: 700; text-align: right; word-break: break-all; max-width: 65%; display: flex; align-items: center; gap: 6px; }
+
+    .pass-box { background: #f8fafc; padding: 3px 8px; border-radius: 6px; border: 1px solid #e2e8f0; font-family: monospace; font-size: 12px; }
+    .toggle-pass-btn { cursor: pointer; color: var(--pink-color); font-size: 13px; }
+  </style>
+</head>
+<body>
+
+  <div class="toast-container-center" id="toastContainer"></div>
+
+  <div class="admin-screen">
+    
+    <!-- Top Admin Header -->
+    <div class="admin-header">
+      <div class="header-info">
+        <div class="admin-avatar"><i class="fa-solid fa-user-gear"></i></div>
+        <div>
+          <div class="admin-title">Admin Dashboard</div>
+          <div class="admin-sub">Advance User Management</div>
+        </div>
+      </div>
+      <button class="btn-action btn-view" onclick="fetchData()" title="Reload Data"><i class="fa-solid fa-rotate-right"></i></button>
+    </div>
+
+    <!-- Live Stat Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-val" id="statTotal">0</div>
+        <div class="stat-lbl">Total Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="statStudents">0</div>
+        <div class="stat-lbl">Students</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val" id="statTeachers">0</div>
+        <div class="stat-lbl">Teachers</div>
+      </div>
+    </div>
+
+    <!-- Controls: Search & Filters -->
+    <div class="controls-card">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search Mobile, Name, Email..." onkeyup="filterUsers()" />
+      </div>
+      <div class="filter-tabs">
+        <button class="tab-btn active" onclick="setRoleFilter('all', this)">All Users</button>
+        <button class="tab-btn" onclick="setRoleFilter('student', this)">Students</button>
+        <button class="tab-btn" onclick="setRoleFilter('teacher', this)">Teachers</button>
+        <button class="tab-btn" onclick="setRoleFilter('other', this)">Others</button>
+      </div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-card">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>User Details</th>
+              <th>Password</th>
+              <th>Status</th>
+              <th>Logins</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody">
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 20px; color: var(--text-muted);">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 20px; color: var(--primary-color);"></i><br>Connecting Firebase...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- User Detail Modal -->
+  <div class="modal-overlay" id="userModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title"><i class="fa-solid fa-id-card" style="color: var(--pink-color);"></i> Complete User Profile</div>
+        <button class="btn-action btn-view" onclick="closeModal()">✕</button>
+      </div>
+      <div id="modalDetails"></div>
+    </div>
+  </div>
+
+  <!-- Firebase Modular SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, get, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAHw2ceBKirLjpBx0soxJD0GHWwXnrxo4Y",
+      authDomain: "thar-e5879.firebaseapp.com",
+      databaseURL: "https://thar-e5879-default-rtdb.firebaseio.com",
+      projectId: "thar-e5879",
+      storageBucket: "thar-e5879.firebasestorage.app",
+      messagingSenderId: "1004657134263",
+      appId: "1:1004657134263:web:a2d8844554000981659b32"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    let rawUsersData = {};
+    let activeRoleFilter = 'all';
+
+    window.showToast = function(message, isError = false) {
+      const container = document.getElementById('toastContainer');
+      container.innerHTML = `<div class="toast-msg ${isError ? 'error' : ''}"><i class="fa-solid ${isError ? 'fa-circle-xmark' : 'fa-circle-check'}"></i> ${message}</div>`;
+      setTimeout(() => container.innerHTML = '', 3000);
+    };
+
+    // Fetch Database Data
+    async function fetchData() {
+      const tbody = document.getElementById('userTableBody');
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 20px; color: var(--primary-color);"></i><br>Syncing Users...</td></tr>`;
+
+      try {
+        const dbRef = ref(db, 'users');
+        const snapshot = await get(dbRef);
+
+        if (snapshot.exists()) {
+          rawUsersData = snapshot.val();
+          renderTable();
+          showToast("Data Synced Live!");
+        } else {
+          rawUsersData = {};
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px;">No registered users in Database.</td></tr>`;
+          updateStats(0, 0, 0);
+        }
+      } catch (err) {
+        showToast("Firebase Error: " + err.message, true);
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: red;">Failed to load data.</td></tr>`;
+      }
+    }
+
+    // Render Data in Table Format
+    function renderTable() {
+      const tbody = document.getElementById('userTableBody');
+      const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+      tbody.innerHTML = '';
+
+      let total = 0, students = 0, teachers = 0;
+      let matchedCount = 0;
+
+      for (let key in rawUsersData) {
+        const u = rawUsersData[key];
+        const role = (u.role || 'student').toLowerCase();
+        const name = u.fullName || u.name || 'N/A';
+        const mobile = u.mobile || key;
+        const email = u.email || 'N/A';
+        const password = u.password || 'N/A';
+        const loginCount = u.loginCount || 1;
+        const status = u.status || 'active'; // Default active
+
+        total++;
+        if (role === 'student') students++;
+        if (role === 'teacher') teachers++;
+
+        const matchesRole = (activeRoleFilter === 'all' || role === activeRoleFilter);
+        const matchesSearch = name.toLowerCase().includes(searchVal) || mobile.toLowerCase().includes(searchVal) || email.toLowerCase().includes(searchVal);
+
+        if (matchesRole && matchesSearch) {
+          matchedCount++;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>
+              <div style="font-weight: 800; color: var(--purple-dark);">${name}</div>
+              <div style="font-size: 10px; color: var(--text-muted);"><i class="fa-solid fa-phone"></i> ${mobile}</div>
+              <div style="margin-top:2px;"><span class="role-badge role-${role}">${role}</span></div>
+            </td>
+            <td>
+              <span class="pass-box" id="pass-box-${key}">••••••</span>
+              <i class="fa-solid fa-eye toggle-pass-btn" onclick="togglePassText('${key}', '${password}')" id="eye-icon-${key}"></i>
+            </td>
+            <td>
+              <span class="status-badge ${status === 'active' ? 'status-active' : 'status-disabled'}" onclick="toggleUserStatus('${key}', '${status}')">
+                <i class="fa-solid ${status === 'active' ? 'fa-circle-check' : 'fa-circle-xmark'}"></i> ${status.toUpperCase()}
+              </span>
+            </td>
+            <td><span class="badge-count">${loginCount}</span></td>
+            <td>
+              <button class="btn-action btn-view" onclick="viewUser('${key}')" title="View Profile"><i class="fa-solid fa-eye"></i></button>
+              <button class="btn-action btn-del" onclick="deleteUser('${key}')" title="Delete User"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        }
+      }
+
+      updateStats(total, students, teachers);
+
+      if (matchedCount === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: var(--text-muted);">No matching users found.</td></tr>`;
+      }
+    }
+
+    function updateStats(tot, std, tch) {
+      document.getElementById('statTotal').innerText = tot;
+      document.getElementById('statStudents').innerText = std;
+      document.getElementById('statTeachers').innerText = tch;
+    }
+
+    // Toggle Password View in Table
+    window.togglePassText = function(key, rawPass) {
+      const box = document.getElementById(`pass-box-${key}`);
+      const icon = document.getElementById(`eye-icon-${key}`);
+
+      if (box.innerText === '••••••') {
+        box.innerText = rawPass;
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        box.innerText = '••••••';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    };
+
+    // Activate / Deactivate User Status
+    window.toggleUserStatus = async function(key, currentStatus) {
+      const newStatus = currentStatus === 'active' ? 'disabled' : 'active';
+      const confirmMsg = newStatus === 'disabled' ? `Are you sure you want to DEACTIVATE this user?` : `Re-activate this user?`;
+
+      if (confirm(confirmMsg)) {
+        try {
+          await update(ref(db, `users/${key}`), { status: newStatus });
+          showToast(`User status updated to ${newStatus.toUpperCase()}`);
+          fetchData();
+        } catch (err) {
+          showToast("Update Failed: " + err.message, true);
+        }
+      }
+    };
+
+    window.filterUsers = function() { renderTable(); };
+
+    window.setRoleFilter = function(role, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeRoleFilter = role;
+      renderTable();
+    };
+
+    // Full Profile View Modal
+    window.viewUser = function(key) {
+      const u = rawUsersData[key];
+      if (!u) return;
+
+      const container = document.getElementById('modalDetails');
+      const passId = `modal-pass-${key}`;
+      const status = u.status || 'active';
+
+      container.innerHTML = `
+        <div class="data-row"><span class="data-label">Full Name</span><span class="data-val">${u.fullName || u.name || 'N/A'}</span></div>
+        <div class="data-row"><span class="data-label">Mobile Number</span><span class="data-val">${u.mobile || key}</span></div>
+        <div class="data-row"><span class="data-label">Email Address</span><span class="data-val">${u.email || 'N/A'}</span></div>
+        <div class="data-row">
+          <span class="data-label">Password</span>
+          <span class="data-val">
+            <span class="pass-box" id="${passId}">••••••</span>
+            <i class="fa-solid fa-eye toggle-pass-btn" onclick="toggleModalPass('${passId}', '${u.password || 'N/A'}', this)"></i>
+          </span>
+        </div>
+        <div class="data-row"><span class="data-label">Account Role</span><span class="data-val"><span class="role-badge role-${u.role || 'student'}">${u.role || 'student'}</span></span></div>
+        <div class="data-row"><span class="data-label">Account Status</span><span class="data-val"><span class="status-badge ${status === 'active' ? 'status-active' : 'status-disabled'}">${status.toUpperCase()}</span></span></div>
+        <div class="data-row"><span class="data-label">Total Logins</span><span class="data-val">${u.loginCount || 1} Times</span></div>
+        <div class="data-row"><span class="data-label">Registration Date</span><span class="data-val">${u.createdAt || u.regDate || 'N/A'}</span></div>
+      `;
+
+      document.getElementById('userModal').classList.add('active');
+    };
+
+    window.toggleModalPass = function(elemId, pass, icon) {
+      const box = document.getElementById(elemId);
+      if (box.innerText === '••••••') {
+        box.innerText = pass;
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        box.innerText = '••••••';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    };
+
+    window.closeModal = function() {
+      document.getElementById('userModal').classList.remove('active');
+    };
+
+    // Delete User
+    window.deleteUser = async function(key) {
+      if (confirm(`Permanently delete user (${key}) from database?`)) {
+        try {
+          await remove(ref(db, `users/${key}`));
+          showToast("User deleted!");
+          fetchData();
+        } catch (err) {
+          showToast("Delete Failed: " + err.message, true);
+        }
+      }
+    };
+
+    window.fetchData = fetchData;
+    fetchData();
+  </script>
+</body>
+</html>

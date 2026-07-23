@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>DWC Study - Registration</title>
+  
+  <!-- Font Awesome Icons & Google Fonts -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       1. ADVANCED PURPLE-PINK VIBRANT THEME VARIABLES
+       ========================================================================== */
+    :root {
+      --primary-gradient: linear-gradient(135deg, #7c3aed 0%, #3904fa 100%);
+      --accent-gradient: linear-gradient(135deg, #4705fd 0%, #8b5cf6 100%);
+      --primary-color: #8b5cf6;
+      --pink-color: #ec4899;
+      --purple-dark: #2e1065;
+      --purple-light: #f5f3ff;
+      --pink-light: #fdf2f8;
+      --border-color: #f0abfc;
+      --input-bg: rgba(255, 255, 255, 0.95);
+      --card-bg: #ffffff;
+      --text-main: #1e1b4b;
+      --text-muted: #64748b;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --shadow-glow: 0 10px 30px -5px rgba(217, 70, 239, 0.3);
+      --shadow-card: 0 20px 40px -15px rgba(124, 58, 237, 0.12);
+      --font-heading: 'Plus Jakarta Sans', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-body);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: linear-gradient(180deg, #ffffff 0%, #ffffff 50%, #ffffff 100%);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 16px 0;
+    }
+
+    .app-screen {
+      width: 100%;
+      max-width: 440px;
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+
+    /* ==========================================================================
+       2. TOP CENTER FULL PROFESSIONAL TOAST NOTIFICATION
+       ========================================================================== */
+    .toast-container-center {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      width: 90%;
+      max-width: 400px;
+      pointer-events: none;
+    }
+
+    .toast-msg {
+      pointer-events: auto;
+      background: var(--primary-gradient);
+      color: #ffffff;
+      padding: 14px 20px;
+      border-radius: var(--radius-md);
+      box-shadow: 0 12px 30px rgba(124, 58, 237, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-family: var(--font-heading);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: slideDownCenter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      backdrop-filter: blur(10px);
+    }
+
+    .toast-msg.error {
+      background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);
+      box-shadow: 0 12px 30px rgba(225, 29, 72, 0.35);
+    }
+
+    @keyframes slideDownCenter {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       3. TOP NAVIGATION & LANGUAGE SELECTOR
+       ========================================================================== */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-icon-back {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      color: var(--purple-dark);
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .lang-selector-wrapper { position: relative; }
+
+    .lang-selector {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--purple-dark);
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(217, 70, 239, 0.15);
+    }
+
+    .lang-dropdown {
+      position: absolute;
+      top: 110%;
+      right: 0;
+      width: 190px;
+      max-height: 240px;
+      overflow-y: auto;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: 0 15px 35px rgba(124, 58, 237, 0.2);
+      display: none;
+      z-index: 100;
+    }
+
+    .lang-dropdown.show { display: block; }
+
+    .lang-option {
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #334155;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+    }
+
+    .lang-option:hover {
+      background: var(--pink-light);
+      color: var(--pink-color);
+    }
+
+    /* ==========================================================================
+       4. HERO BANNER WITH CIRCLE LOGO & GRADIENT STYLING
+       ========================================================================== */
+    .hero-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .circle-logo-container {
+      position: relative;
+      width: 52px;
+      height: 52px;
+      flex-shrink: 0;
+    }
+
+    .brand-logo-icon {
+      width: 100%;
+      height: 100%;
+      background: var(--primary-gradient);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-glow);
+      overflow: hidden;
+      border: 3px solid #ffffff;
+    }
+
+    .brand-logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .upload-camera-badge {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 20px;
+      height: 20px;
+      background: var(--pink-color);
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      cursor: pointer;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    #imageUploadInput { display: none; }
+
+    .brand-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      font-weight: 800;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-tagline {
+      font-size: 10px;
+      color: var(--pink-color);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .main-heading {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--purple-dark);
+      line-height: 1.2;
+    }
+
+    .main-heading span {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .main-subheading {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    .hero-illustration {
+      width: 130px;
+      height: 120px;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       5. TRUST BADGES
+       ========================================================================== */
+    .trust-badges-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      border: 1px solid rgba(240, 171, 252, 0.5);
+      box-shadow: var(--shadow-card);
+    }
+
+    .badge-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--pink-light);
+      color: var(--pink-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .badge-text-title {
+      font-family: var(--font-heading);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--purple-dark);
+    }
+
+    .badge-text-sub {
+      font-size: 9px;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       6. MAIN FORM CARD
+       ========================================================================== */
+    .form-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 22px 18px;
+      border: 1.5px solid rgba(240, 171, 252, 0.4);
+      box-shadow: var(--shadow-card);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .section-icon-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--purple-dark);
+    }
+
+    .section-subtitle {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: var(--pink-light);
+      border: 1.5px solid transparent;
+      border-radius: var(--radius-md);
+      height: 48px;
+      padding: 0 14px;
+      transition: all 0.25s ease;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--pink-color);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.15);
+    }
+
+    .input-wrapper i.leading-icon {
+      color: var(--primary-color);
+      font-size: 15px;
+      margin-right: 10px;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--purple-dark);
+    }
+
+    .strength-bar-container {
+      height: 4px;
+      width: 100%;
+      background: #e2e8f0;
+      border-radius: 2px;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+
+    .strength-bar {
+      height: 100%;
+      width: 0%;
+      transition: all 0.3s ease;
+    }
+
+    /* ==========================================================================
+       7. ROLE SELECTION
+       ========================================================================== */
+    .role-section-label {
+      font-family: var(--font-heading);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--purple-dark);
+      margin: 14px 0 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .role-card {
+      position: relative;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 12px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      background: #ffffff;
+      transition: all 0.2s ease;
+    }
+
+    .role-card input[type="radio"] { position: absolute; opacity: 0; }
+
+    .role-icon { font-size: 22px; color: var(--text-muted); }
+
+    .role-name { font-size: 11px; font-weight: 700; color: var(--purple-dark); }
+
+    .check-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: #ffffff;
+      background: #ffffff;
+    }
+
+    .role-card.selected {
+      border-color: var(--pink-color);
+      background: var(--pink-light);
+    }
+
+    .role-card.selected .role-icon, .role-card.selected .role-name { color: var(--pink-color); }
+
+    .role-card.selected .check-badge {
+      background: var(--pink-color);
+      border-color: var(--pink-color);
+    }
+
+    /* ==========================================================================
+       8. BUTTONS & SOCIALS
+       ========================================================================== */
+    .terms-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .custom-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--pink-color);
+      cursor: pointer;
+    }
+
+    .terms-text { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+
+    .terms-text a { color: var(--pink-color); text-decoration: none; font-weight: 700; }
+
+    .btn-submit {
+      width: 100%;
+      height: 50px;
+      background: var(--primary-gradient);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-heading);
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: var(--shadow-glow);
+      transition: transform 0.1s ease;
+    }
+
+    .btn-submit:active { transform: scale(0.98); }
+
+    .divider-box {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .divider-line { flex: 1; height: 1px; background: #e2e8f0; }
+
+    .divider-text { padding: 0 10px; font-size: 11px; font-weight: 700; color: #94a3b8; }
+
+    .social-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-social {
+      height: 44px;
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--purple-dark);
+      cursor: pointer;
+    }
+
+    .login-footer-link {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .login-footer-link a {
+      color: var(--pink-color);
+      font-weight: 800;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Center Toast Notification Slot -->
+  <div class="toast-container-center" id="toastContainer"></div>
+
+  <div class="app-screen">
+    
+    <!-- Top Nav with Languages -->
+    <div class="top-nav">
+      <button class="btn-icon-back"><i class="fa-solid fa-arrow-left"></i></button>
+
+      <div class="lang-selector-wrapper">
+        <div class="lang-selector" id="langSelectorBtn">
+          <i class="fa-solid fa-globe"></i>
+          <span id="currentLangText">English</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="lang-dropdown" id="langDropdown">
+          <div class="lang-option" onclick="changeLanguage('en', 'English')">English <span>EN</span></div>
+          <div class="lang-option" onclick="changeLanguage('hi', 'हिंदी')">हिंदी (Hindi) <span>HI</span></div>
+          <div class="lang-option" onclick="changeLanguage('mr', 'मराठी')">मराठी (Marathi) <span>MR</span></div>
+          <div class="lang-option" onclick="changeLanguage('gu', 'ગુજરાતી')">ગુજરાતી (Gujarati) <span>GU</span></div>
+          <div class="lang-option" onclick="changeLanguage('bn', 'বাংলা')">বাংলা (Bengali) <span>BN</span></div>
+          <div class="lang-option" onclick="changeLanguage('ta', 'தமிழ்')">தமிழ் (Tamil) <span>TA</span></div>
+          <div class="lang-option" onclick="changeLanguage('te', 'తెలుగు')">తెలుగు (Telugu) <span>TE</span></div>
+          <div class="lang-option" onclick="changeLanguage('kn', 'ಕನ್ನಡ')">ಕನ್ನಡ (Kannada) <span>KN</span></div>
+          <div class="lang-option" onclick="changeLanguage('pa', 'ਪੰਜਾਬੀ')">ਪੰਜਾਬੀ (Punjabi) <span>PA</span></div>
+          <div class="lang-option" onclick="changeLanguage('ur', 'اردو')">اردو (Urdu) <span>UR</span></div>
+          <div class="lang-option" onclick="changeLanguage('bho', 'भोजपुरी')">भोजपुरी (Bhojpuri) <span>BHO</span></div>
+          <div class="lang-option" onclick="changeLanguage('or', 'ଓଡ଼ିଆ')">ଓଡ଼ିଆ (Odia) <span>OR</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Header with Logo Attachment -->
+    <div class="hero-section">
+      <div class="hero-content">
+        <div class="brand-header">
+          
+          <!-- Circle Profile Logo Container -->
+          <div class="circle-logo-container">
+            <div class="brand-logo-icon">
+              <img id="circleAvatarPreview" src="logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/150/7c3aed/ffffff?text=DWC'" />
+            </div>
+            <label for="imageUploadInput" class="upload-camera-badge" title="Change Photo">
+              <i class="fa-solid fa-camera"></i>
+            </label>
+            <input type="file" id="imageUploadInput" accept="image/*" />
+          </div>
+
+          <div>
+            <div class="brand-title" id="txtTitle">DWC STUDY</div>
+            <div class="brand-tagline" id="txtTagline">Dream. Work. Conquer.</div>
+          </div>
+        </div>
+        
+        <h1 class="main-heading" id="txtMainHeading">Create <span>Your Account</span></h1>
+        <p class="main-subheading" id="txtSubHeading">Join millions of learners and start your learning journey today.</p>
+      </div>
+
+      <!-- Hero Illustration -->
+      <div class="hero-illustration">
+        <svg viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+          <circle cx="100" cy="90" r="70" fill="#FCE7F3" />
+          <path d="M40 135 L160 135 L150 155 L30 155 Z" fill="#7C3AED"/>
+          <rect x="30" y="145" width="120" height="12" rx="2" fill="#DB2777"/>
+          <rect x="35" y="147" width="110" height="8" fill="#FFFFFF" opacity="0.9"/>
+          <path d="M100 45 L165 65 L100 85 L35 65 Z" fill="#8B5CF6"/>
+          <path d="M100 45 L165 65 L100 70 L35 65 Z" fill="#EC4899"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Trust Badges Strip -->
+    <div class="trust-badges-card">
+      <div class="badge-item">
+        <div class="badge-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <div>
+          <div class="badge-text-title" id="badgeTitle1">Secure</div>
+          <div class="badge-text-sub" id="badgeSub1">Data Protected</div>
+        </div>
+      </div>
+
+      <div class="badge-item">
+        <div class="badge-icon"><i class="fa-solid fa-bolt"></i></div>
+        <div>
+          <div class="badge-text-title" id="badgeTitle2">Quick</div>
+          <div class="badge-text-sub" id="badgeSub2">Instant Access</div>
+        </div>
+      </div>
+
+      <div class="badge-item">
+        <div class="badge-icon"><i class="fa-solid fa-award"></i></div>
+        <div>
+          <div class="badge-text-title" id="badgeTitle3">Trusted</div>
+          <div class="badge-text-sub" id="badgeSub3">1M+ Learners</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registration Form Card -->
+    <div class="form-card">
+      <div class="section-header">
+        <div class="section-icon-badge"><i class="fa-solid fa-user-plus"></i></div>
+        <div>
+          <div class="section-title" id="secTitle">Personal Information</div>
+          <div class="section-subtitle" id="secSubTitle">Fill in your basic details to get started</div>
+        </div>
+      </div>
+
+      <form id="registerForm">
+        <div class="form-row">
+          <div class="input-wrapper">
+            <i class="fa-regular fa-user leading-icon"></i>
+            <input type="text" id="fullName" placeholder="Full Name" required />
+          </div>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-user-gear leading-icon"></i>
+            <input type="text" id="userName" placeholder="Username" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="fa-regular fa-envelope leading-icon"></i>
+            <input type="email" id="email" placeholder="Email Address" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="fa-solid fa-phone leading-icon"></i>
+            <input type="tel" id="mobile" placeholder="Mobile Number" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock leading-icon"></i>
+            <input type="password" id="password" placeholder="Password" required />
+          </div>
+          <div class="strength-bar-container">
+            <div class="strength-bar" id="strengthBar"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock leading-icon"></i>
+            <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
+          </div>
+        </div>
+
+        <div class="role-section-label">
+          <i class="fa-solid fa-users"></i>
+          <span id="lblRole">I am a</span>
+        </div>
+
+        <div class="role-grid">
+          <label class="role-card selected" onclick="selectRole(this)">
+            <input type="radio" name="userRole" value="student" checked />
+            <div class="check-badge"><i class="fa-solid fa-check"></i></div>
+            <i class="fa-solid fa-graduation-cap role-icon"></i>
+            <span class="role-name" id="roleStudent">Student</span>
+          </label>
+
+          <label class="role-card" onclick="selectRole(this)">
+            <input type="radio" name="userRole" value="teacher" />
+            <div class="check-badge"><i class="fa-solid fa-check"></i></div>
+            <i class="fa-solid fa-chalkboard-user role-icon"></i>
+            <span class="role-name" id="roleTeacher">Teacher</span>
+          </label>
+
+          <label class="role-card" onclick="selectRole(this)">
+            <input type="radio" name="userRole" value="other" />
+            <div class="check-badge"><i class="fa-solid fa-check"></i></div>
+            <i class="fa-solid fa-users-gear role-icon"></i>
+            <span class="role-name" id="roleOther">Other</span>
+          </label>
+        </div>
+
+        <div class="terms-wrapper">
+          <input type="checkbox" id="termsCheck" class="custom-checkbox" required />
+          <label for="termsCheck" class="terms-text" id="lblTerms">
+            I agree to the <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btnSubmit">
+          <span id="btnSubmitText">Create Account</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="divider-box">
+        <div class="divider-line"></div>
+        <span class="divider-text" id="txtOr">OR</span>
+        <div class="divider-line"></div>
+      </div>
+
+      <div class="social-grid">
+        <button class="btn-social" id="btnGoogleLogin">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+          Google
+        </button>
+
+        <button class="btn-social" id="btnFacebookLogin">
+          <i class="fa-brands fa-facebook" style="color: #1877f2; font-size: 18px;"></i>
+          Facebook
+        </button>
+      </div>
+
+      <!-- Login Redirect Link -->
+      <div class="login-footer-link">
+        <span id="txtHaveAccount">Already have an account?</span> 
+        <a href="login.html" id="linkLogin">Login</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FIREBASE MODULE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAHw2ceBKirLjpBx0soxJD0GHWwXnrxo4Y",
+      authDomain: "thar-e5879.firebaseapp.com",
+      databaseURL: "https://thar-e5879-default-rtdb.firebaseio.com",
+      projectId: "thar-e5879",
+      storageBucket: "thar-e5879.firebasestorage.app",
+      messagingSenderId: "1004657134263",
+      appId: "1:1004657134263:web:a2d8844554000981659b32"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    let profileImageData = "";
+
+    // TOP CENTER TOAST NOTIFICATION FUNCTION
+    function showCenterToast(message, isSuccess = true) {
+      const container = document.getElementById('toastContainer');
+      container.innerHTML = ""; // Clear existing
+
+      const toast = document.createElement('div');
+      toast.className = `toast-msg ${isSuccess ? '' : 'error'}`;
+      toast.innerHTML = `<i class="fa-solid ${isSuccess ? 'fa-circle-check' : 'fa-triangle-exclamation'}"></i> ${message}`;
+      
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // Profile Image Attach
+    const imageUploadInput = document.getElementById('imageUploadInput');
+    const circleAvatarPreview = document.getElementById('circleAvatarPreview');
+
+    imageUploadInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        if (file.size > 2 * 1024 * 1024) {
+          showCenterToast("Image size must be less than 2MB", false);
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          profileImageData = evt.target.result;
+          circleAvatarPreview.src = profileImageData;
+          showCenterToast("Profile image attached successfully!");
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Form Submit Handler & Redirect to login.html
+    const registerForm = document.getElementById('registerForm');
+    const btnSubmitText = document.getElementById('btnSubmitText');
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const fullName = document.getElementById('fullName').value.trim();
+      const userName = document.getElementById('userName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const mobile = document.getElementById('mobile').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const role = document.querySelector('input[name="userRole"]:checked').value;
+
+      if (password !== confirmPassword) {
+        showCenterToast("Passwords do not match!", false);
+        return;
+      }
+
+      try {
+        btnSubmitText.textContent = "Processing...";
+
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await set(ref(database, 'users/' + user.uid), {
+          uid: user.uid,
+          fullName, userName, email, mobile, role,
+          profileImage: profileImageData || "logo.png",
+          createdAt: new Date().toISOString()
+        });
+
+        // Top Center Success Message
+        showCenterToast("Registration Successful! Redirecting to Login...", true);
+        btnSubmitText.textContent = "Registered!";
+
+        // REDIRECT TO LOGIN.HTML AFTER 2 SECONDS
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+
+      } catch (error) {
+        showCenterToast(error.message, false);
+        btnSubmitText.textContent = "Create Account";
+      }
+    });
+
+    // Google Sign in
+    document.getElementById('btnGoogleLogin').addEventListener('click', async () => {
+      try {
+        const result = await signInWithPopup(auth, new GoogleAuthProvider());
+        showCenterToast(`Welcome ${result.user.displayName}! Redirecting...`, true);
+        setTimeout(() => window.location.href = "login.html", 1500);
+      } catch (err) {
+        showCenterToast(err.message, false);
+      }
+    });
+  </script>
+
+  <script>
+    function selectRole(element) {
+      document.querySelectorAll('.role-card').forEach(card => card.classList.remove('selected'));
+      element.classList.add('selected');
+      element.querySelector('input[type="radio"]').checked = true;
+    }
+
+    // Password Strength
+    document.getElementById('password').addEventListener('input', (e) => {
+      const val = e.target.value;
+      let score = 0;
+      if (val.length >= 6) score += 33;
+      if (/[A-Z]/.test(val)) score += 33;
+      if (/[0-9]/.test(val) || /[^A-Za-z0-9]/.test(val)) score += 34;
+
+      const bar = document.getElementById('strengthBar');
+      bar.style.width = score + '%';
+      if (score <= 33) bar.style.background = '#ef4444';
+      else if (score <= 66) bar.style.background = '#f59e0b';
+      else bar.style.background = '#10b981';
+    });
+
+    // Multi-Language System
+    const langSelectorBtn = document.getElementById('langSelectorBtn');
+    const langDropdown = document.getElementById('langDropdown');
+
+    langSelectorBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      langDropdown.classList.toggle('show');
+    });
+
+    document.addEventListener('click', () => langDropdown.classList.remove('show'));
+
+    function changeLanguage(langCode, langName) {
+      document.getElementById('currentLangText').textContent = langName;
+      langDropdown.classList.remove('show');
+    }
+    window.changeLanguage = changeLanguage;
+  </script>
+</body>
+</html>
