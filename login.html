@@ -11,26 +11,33 @@
 
   <style>
     /* ==========================================================================
-       1. ADVANCED PURPLE-PINK VIBRANT THEME VARIABLES
+       1. ADVANCED BLUE-PURPLE-WHITE VIBRANT GLASSMOURPHISM THEME
        ========================================================================== */
     :root {
-      --primary-gradient: linear-gradient(135deg, #7c3aed 0%, #d946ef 100%);
-      --accent-gradient: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-      --primary-color: #8b5cf6;
-      --pink-color: #ec4899;
-      --purple-dark: #2e1065;
-      --purple-light: #f5f3ff;
-      --pink-light: #fdf2f8;
-      --border-color: #f0abfc;
-      --input-bg: rgba(255, 255, 255, 0.95);
-      --card-bg: #ffffff;
-      --text-main: #1e1b4b;
+      --primary-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      --btn-hover-gradient: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+      
+      --blue-primary: #2563eb;
+      --purple-primary: #7c3aed;
+      --accent-cyan: #06b6d4;
+      
+      --bg-dark-purple: #0f172a;
+      --text-main: #0f172a;
       --text-muted: #64748b;
+      
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --input-bg: #f8fafc;
+      --border-color: #cbd5e1;
+      --focus-border: #3b82f6;
+
       --radius-sm: 10px;
-      --radius-md: 16px;
+      --radius-md: 14px;
       --radius-lg: 24px;
-      --shadow-glow: 0 10px 30px -5px rgba(217, 70, 239, 0.3);
-      --shadow-card: 0 20px 40px -15px rgba(124, 58, 237, 0.12);
+      
+      --shadow-glow: 0 10px 25px -5px rgba(37, 99, 235, 0.35);
+      --shadow-card: 0 20px 40px -15px rgba(124, 58, 237, 0.18);
+      
       --font-heading: 'Plus Jakarta Sans', sans-serif;
       --font-body: 'Inter', sans-serif;
     }
@@ -44,11 +51,11 @@
     }
 
     body {
-      background: linear-gradient(180deg, #f3e8ff 0%, #fce7f3 50%, #f5f3ff 100%);
+      background: radial-gradient(circle at top left, #eff6ff, #f3e8ff, #e0e7ff);
       color: var(--text-main);
       display: flex;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
       min-height: 100vh;
       padding: 16px 0;
     }
@@ -64,11 +71,11 @@
     }
 
     /* ==========================================================================
-       2. TOP CENTER TOAST NOTIFICATION
+       2. TOP TOAST NOTIFICATION
        ========================================================================== */
     .toast-container-center {
       position: fixed;
-      top: 15px;
+      top: 20px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 9999;
@@ -83,7 +90,7 @@
       color: #ffffff;
       padding: 14px 20px;
       border-radius: var(--radius-md);
-      box-shadow: 0 12px 30px rgba(124, 58, 237, 0.4);
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -91,20 +98,19 @@
       font-family: var(--font-heading);
       font-size: 13px;
       font-weight: 700;
-      letter-spacing: 0.2px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.4);
       animation: slideDownCenter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
     }
 
     .toast-msg.error {
-      background: linear-gradient(135deg, #e11d48 0%, #f43f5e 100%);
-      box-shadow: 0 12px 30px rgba(225, 29, 72, 0.35);
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      box-shadow: 0 12px 30px rgba(239, 68, 68, 0.35);
     }
 
     @keyframes slideDownCenter {
-      from { opacity: 0; transform: translateY(-30px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translate(-50%, -30px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
     }
 
     /* ==========================================================================
@@ -117,18 +123,24 @@
     }
 
     .btn-icon-back {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: #ffffff;
-      border: 1px solid var(--border-color);
-      color: var(--purple-dark);
+      border: 1.5px solid #e2e8f0;
+      color: var(--blue-primary);
       font-size: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: var(--shadow-glow);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+    }
+
+    .btn-icon-back:hover {
+      background: var(--blue-primary);
+      color: #ffffff;
     }
 
     .lang-selector-wrapper { position: relative; }
@@ -138,14 +150,14 @@
       align-items: center;
       gap: 8px;
       background: #ffffff;
-      border: 1px solid var(--border-color);
+      border: 1.5px solid #e2e8f0;
       padding: 8px 16px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 700;
-      color: var(--purple-dark);
+      color: var(--blue-primary);
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(217, 70, 239, 0.15);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
     }
 
     .lang-dropdown {
@@ -156,9 +168,9 @@
       max-height: 240px;
       overflow-y: auto;
       background: #ffffff;
-      border: 1px solid var(--border-color);
+      border: 1px solid #e2e8f0;
       border-radius: var(--radius-md);
-      box-shadow: 0 15px 35px rgba(124, 58, 237, 0.2);
+      box-shadow: 0 15px 35px rgba(37, 99, 235, 0.15);
       display: none;
       z-index: 100;
     }
@@ -177,12 +189,12 @@
     }
 
     .lang-option:hover {
-      background: var(--pink-light);
-      color: var(--pink-color);
+      background: #eff6ff;
+      color: var(--blue-primary);
     }
 
     /* ==========================================================================
-       4. HERO BANNER WITH LOGO & ILLUSTRATION
+       4. HERO BANNER
        ========================================================================== */
     .hero-section {
       display: flex;
@@ -195,13 +207,12 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .circle-logo-container {
-      position: relative;
-      width: 52px;
-      height: 52px;
+      width: 50px;
+      height: 50px;
       flex-shrink: 0;
     }
 
@@ -215,14 +226,13 @@
       justify-content: center;
       box-shadow: var(--shadow-glow);
       overflow: hidden;
-      border: 3px solid #ffffff;
+      border: 2px solid #ffffff;
     }
 
     .brand-logo-icon img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: block;
     }
 
     .brand-title {
@@ -232,12 +242,11 @@
       background: var(--primary-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
     }
 
     .brand-tagline {
       font-size: 10px;
-      color: var(--pink-color);
+      color: var(--purple-primary);
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -247,12 +256,12 @@
       font-family: var(--font-heading);
       font-size: 24px;
       font-weight: 800;
-      color: var(--purple-dark);
+      color: var(--text-main);
       line-height: 1.2;
     }
 
     .main-heading span {
-      background: var(--accent-gradient);
+      background: var(--primary-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -265,8 +274,8 @@
     }
 
     .hero-illustration {
-      width: 130px;
-      height: 120px;
+      width: 120px;
+      height: 110px;
       flex-shrink: 0;
     }
 
@@ -275,22 +284,23 @@
        ========================================================================== */
     .form-card {
       background: var(--card-bg);
+      backdrop-filter: blur(16px);
       border-radius: var(--radius-lg);
-      padding: 22px 18px;
-      border: 1.5px solid rgba(240, 171, 252, 0.4);
+      padding: 24px 20px;
+      border: 1.5px solid rgba(255, 255, 255, 0.8);
       box-shadow: var(--shadow-card);
     }
 
     .section-header {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
     .section-icon-badge {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: var(--primary-gradient);
       color: #ffffff;
@@ -303,9 +313,9 @@
 
     .section-title {
       font-family: var(--font-heading);
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 800;
-      color: var(--purple-dark);
+      color: var(--text-main);
     }
 
     .section-subtitle {
@@ -313,30 +323,30 @@
       color: var(--text-muted);
     }
 
-    .form-group { margin-bottom: 14px; }
+    .form-group { margin-bottom: 16px; }
 
     .input-wrapper {
       position: relative;
       display: flex;
       align-items: center;
-      background: var(--pink-light);
-      border: 1.5px solid transparent;
+      background: var(--input-bg);
+      border: 1.5px solid #e2e8f0;
       border-radius: var(--radius-md);
-      height: 48px;
+      height: 50px;
       padding: 0 14px;
       transition: all 0.25s ease;
     }
 
     .input-wrapper:focus-within {
-      border-color: var(--pink-color);
+      border-color: var(--focus-border);
       background: #ffffff;
-      box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.15);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
     }
 
     .input-wrapper i.leading-icon {
-      color: var(--primary-color);
-      font-size: 15px;
-      margin-right: 10px;
+      color: var(--blue-primary);
+      font-size: 16px;
+      margin-right: 12px;
     }
 
     .input-wrapper input {
@@ -346,13 +356,13 @@
       background: transparent;
       font-size: 13px;
       font-weight: 600;
-      color: var(--purple-dark);
+      color: var(--text-main);
     }
 
     .toggle-password {
       color: var(--text-muted);
       cursor: pointer;
-      font-size: 14px;
+      font-size: 15px;
       padding: 4px;
     }
 
@@ -360,8 +370,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 18px;
-      font-size: 11px;
+      margin-bottom: 20px;
+      font-size: 12px;
     }
 
     .remember-me {
@@ -370,12 +380,13 @@
       gap: 6px;
       color: var(--text-muted);
       font-weight: 600;
+      cursor: pointer;
     }
 
-    .remember-me input { accent-color: var(--pink-color); }
+    .remember-me input { accent-color: var(--blue-primary); }
 
     .forgot-pass {
-      color: var(--pink-color);
+      color: var(--purple-primary);
       font-weight: 700;
       text-decoration: none;
     }
@@ -396,7 +407,11 @@
       gap: 10px;
       cursor: pointer;
       box-shadow: var(--shadow-glow);
-      transition: transform 0.1s ease;
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background: var(--btn-hover-gradient);
     }
 
     .btn-submit:active { transform: scale(0.98); }
@@ -417,9 +432,9 @@
     }
 
     .btn-social {
-      height: 44px;
+      height: 46px;
       background: #ffffff;
-      border: 1.5px solid var(--border-color);
+      border: 1.5px solid #e2e8f0;
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
@@ -427,16 +442,21 @@
       gap: 8px;
       font-size: 12px;
       font-weight: 700;
-      color: var(--purple-dark);
+      color: var(--text-main);
       cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn-social:hover {
+      background: #f8fafc;
     }
 
     /* OTP Bottom Sheet Modal */
     .otp-modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(30, 27, 75, 0.6);
-      backdrop-filter: blur(5px);
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(6px);
       z-index: 9000;
       display: none;
       align-items: flex-end;
@@ -451,19 +471,19 @@
       background: #ffffff;
       border-radius: 24px 24px 0 0;
       padding: 24px;
-      box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
       animation: slideUpModal 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
     .otp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .otp-title { font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: var(--purple-dark); }
-    .btn-close-modal { width: 30px; height: 30px; border-radius: 50%; background: var(--pink-light); border: none; color: var(--pink-color); cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+    .otp-title { font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: var(--text-main); }
+    .btn-close-modal { width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-    .otp-inputs-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 18px 0; }
-    .otp-box { height: 48px; border: 2px solid var(--border-color); border-radius: 10px; text-align: center; font-size: 18px; font-weight: 800; color: var(--purple-dark); outline: none; background: var(--pink-light); }
-    .otp-box:focus { border-color: var(--pink-color); background: #ffffff; }
+    .otp-inputs-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 20px 0; }
+    .otp-box { height: 50px; border: 2px solid #e2e8f0; border-radius: 10px; text-align: center; font-size: 18px; font-weight: 800; color: var(--text-main); outline: none; background: #f8fafc; }
+    .otp-box:focus { border-color: var(--blue-primary); background: #ffffff; }
 
     .register-footer-link {
       text-align: center;
@@ -474,7 +494,7 @@
     }
 
     .register-footer-link a {
-      color: var(--pink-color);
+      color: var(--blue-primary);
       font-weight: 800;
       text-decoration: none;
     }
@@ -533,12 +553,12 @@
 
       <!-- Vector Illustration SVG -->
       <svg class="hero-illustration" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="100" cy="90" r="70" fill="#f472b6" opacity="0.15"/>
-        <path d="M60 140 C60 110 80 95 100 95 C120 95 140 110 140 140" stroke="#8b5cf6" stroke-width="8" stroke-linecap="round"/>
-        <circle cx="100" cy="65" r="22" fill="#ec4899"/>
-        <path d="M125 50 L145 35 L145 65 Z" fill="#d946ef"/>
+        <circle cx="100" cy="90" r="70" fill="#3b82f6" opacity="0.12"/>
+        <path d="M60 140 C60 110 80 95 100 95 C120 95 140 110 140 140" stroke="#7c3aed" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="100" cy="65" r="22" fill="#2563eb"/>
+        <path d="M125 50 L145 35 L145 65 Z" fill="#3b82f6"/>
         <circle cx="145" cy="35" r="5" fill="#7c3aed"/>
-        <path d="M45 75 L70 60 L95 75 L70 90 Z" fill="#8b5cf6"/>
+        <path d="M45 75 L70 60 L95 75 L70 90 Z" fill="#2563eb"/>
       </svg>
     </div>
 
@@ -601,7 +621,7 @@
       <!-- Social Buttons -->
       <div class="social-grid">
         <button class="btn-social" id="btnOtpTrigger">
-          <i class="fa-solid fa-mobile-screen-button" style="color: #ec4899; font-size: 16px;"></i>
+          <i class="fa-solid fa-mobile-screen-button" style="color: #2563eb; font-size: 16px;"></i>
           <span>OTP Login</span>
         </button>
         <button class="btn-social" id="btnGoogleLogin">
@@ -623,7 +643,7 @@
   <div class="otp-modal-overlay" id="otpModal">
     <div class="otp-modal-card">
       <div class="otp-header">
-        <div class="otp-title"><i class="fa-solid fa-shield-halved" style="color: var(--pink-color);"></i> Verify 6-Digit OTP</div>
+        <div class="otp-title"><i class="fa-solid fa-shield-halved" style="color: var(--blue-primary);"></i> Verify 6-Digit OTP</div>
         <button class="btn-close-modal" id="btnCloseOtp">✕</button>
       </div>
       
@@ -642,12 +662,12 @@
     </div>
   </div>
 
-  <!-- Firebase Modular SDK & Functional Script -->
+  <!-- Firebase Modular SDK & Corrected Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Firebase Config (thar-e5879)
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyAHw2ceBKirLjpBx0soxJD0GHWwXnrxo4Y",
       authDomain: "thar-e5879.firebaseapp.com",
@@ -711,7 +731,7 @@
       }
     });
 
-    // 4. Role Redirection Logic
+    // 4. Role Redirection
     function redirectUser(role) {
       showToast(`Verified! Redirecting to ${role.toUpperCase()} Dashboard...`, 'success');
       setTimeout(() => {
@@ -722,9 +742,11 @@
       }, 1500);
     }
 
-    // 5. Dual-Login Handler (Mobile OR Email + Password)
+    // 5. Corrected Firebase Authentication Logic (Fixing Password Issue)
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      
+      // Trim string spaces to fix matching errors
       const userInput = document.getElementById('loginUserInput').value.trim();
       const pass = document.getElementById('loginPassword').value.trim();
       const btn = document.getElementById('btnLogin');
@@ -740,17 +762,25 @@
           const users = snapshot.val();
           let matchedUser = null;
 
-          // Check by Mobile Key or Email Property inside user object
+          // Check through users with string normalization
           for (let key in users) {
             const user = users[key];
-            if (key === userInput || user.mobile === userInput || (user.email && user.email.toLowerCase() === userInput.toLowerCase())) {
+            
+            const dbMobile = user.mobile ? String(user.mobile).trim() : "";
+            const dbEmail = user.email ? String(user.email).trim().toLowerCase() : "";
+            const dbKey = String(key).trim();
+
+            if (dbKey === userInput || dbMobile === userInput || (dbEmail && dbEmail === userInput.toLowerCase())) {
               matchedUser = user;
               break;
             }
           }
 
           if (matchedUser) {
-            if (matchedUser.password === pass) {
+            // String conversion check prevents password rejection due to data types
+            const dbPassword = String(matchedUser.password || '').trim();
+            
+            if (dbPassword === pass) {
               redirectUser(matchedUser.role || 'student');
             } else {
               showToast("Incorrect Password!", "error");
@@ -774,7 +804,7 @@
       }
     });
 
-    // 6. OTP Modal Trigger
+    // 6. OTP Trigger Modal
     document.getElementById('btnOtpTrigger').addEventListener('click', () => {
       const userInput = document.getElementById('loginUserInput').value.trim();
       if (!userInput) {
@@ -814,7 +844,10 @@
 
           for (let key in users) {
             const user = users[key];
-            if (key === userInput || user.mobile === userInput || (user.email && user.email.toLowerCase() === userInput.toLowerCase())) {
+            const dbMobile = user.mobile ? String(user.mobile).trim() : "";
+            const dbEmail = user.email ? String(user.email).trim().toLowerCase() : "";
+
+            if (key === userInput || dbMobile === userInput || (dbEmail && dbEmail === userInput.toLowerCase())) {
               matchedUser = user;
               break;
             }
@@ -836,7 +869,7 @@
       });
     });
 
-    // 7. Dummy Actions
+    // 7. Actions
     document.getElementById('btnForgotPass').addEventListener('click', (e) => {
       e.preventDefault();
       showToast('Reset password link sent to registered email/phone!', 'success');
