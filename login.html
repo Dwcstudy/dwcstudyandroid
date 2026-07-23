@@ -11,7 +11,7 @@
 
   <style>
     /* ==========================================================================
-       1. ADVANCED BLUE-PURPLE-WHITE VIBRANT GLASSMOURPHISM THEME
+       1. ADVANCED BLUE-PURPLE-WHITE VIBRANT GLASSMORPHISM THEME
        ========================================================================== */
     :root {
       --primary-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
@@ -662,12 +662,12 @@
     </div>
   </div>
 
-  <!-- Firebase Modular SDK & Corrected Script -->
+  <!-- Firebase Modular SDK & Dynamic Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // Firebase Config
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAHw2ceBKirLjpBx0soxJD0GHWwXnrxo4Y",
       authDomain: "thar-e5879.firebaseapp.com",
@@ -681,7 +681,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // 1. Toast Alert Function
+    // 1. Toast Notification Alert Function
     window.showToast = function(message, type = 'success') {
       const container = document.getElementById('toastContainer');
       container.innerHTML = '';
@@ -700,7 +700,7 @@
       }, 3500);
     };
 
-    // 2. Language Selector
+    // 2. Language Selector Functionality
     const langBtn = document.getElementById('langSelectorBtn');
     const langDropdown = document.getElementById('langDropdown');
 
@@ -719,7 +719,7 @@
       showToast(`Language changed to ${name}`, 'success');
     };
 
-    // 3. Password Toggle
+    // 3. Password Visibility Toggle
     document.getElementById('togglePasswordBtn').addEventListener('click', function() {
       const passInput = document.getElementById('loginPassword');
       if (passInput.type === 'password') {
@@ -731,22 +731,28 @@
       }
     });
 
-    // 4. Role Redirection
+    // 4. Smart Role-Based Redirection
     function redirectUser(role) {
-      showToast(`Verified! Redirecting to ${role.toUpperCase()} Dashboard...`, 'success');
+      const targetRole = String(role || 'student').toLowerCase().trim();
+      showToast(`Login Successful! Redirecting to ${targetRole.toUpperCase()} Dashboard...`, 'success');
+      
       setTimeout(() => {
-        if (role === 'student') window.location.href = 'student.html';
-        else if (role === 'teacher') window.location.href = 'teacher.html';
-        else if (role === 'other') window.location.href = 'otheruser.html';
-        else window.location.href = 'student.html';
-      }, 1500);
+        if (targetRole === 'student') {
+          window.location.href = 'student.html';
+        } else if (targetRole === 'teacher') {
+          window.location.href = 'teacher.html';
+        } else if (targetRole === 'other') {
+          window.location.href = 'otheruser.html';
+        } else {
+          window.location.href = 'student.html';
+        }
+      }, 1200);
     }
 
-    // 5. Corrected Firebase Authentication Logic (Fixing Password Issue)
+    // 5. Firebase Realtime Verification Logic
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      // Trim string spaces to fix matching errors
       const userInput = document.getElementById('loginUserInput').value.trim();
       const pass = document.getElementById('loginPassword').value.trim();
       const btn = document.getElementById('btnLogin');
@@ -762,7 +768,7 @@
           const users = snapshot.val();
           let matchedUser = null;
 
-          // Check through users with string normalization
+          // Search inside users node
           for (let key in users) {
             const user = users[key];
             
@@ -777,11 +783,10 @@
           }
 
           if (matchedUser) {
-            // String conversion check prevents password rejection due to data types
             const dbPassword = String(matchedUser.password || '').trim();
             
             if (dbPassword === pass) {
-              redirectUser(matchedUser.role || 'student');
+              redirectUser(matchedUser.role);
             } else {
               showToast("Incorrect Password!", "error");
               btn.innerHTML = '<span>SIGN IN</span> <i class="fa-solid fa-arrow-right"></i>';
@@ -793,7 +798,7 @@
             btn.disabled = false;
           }
         } else {
-          showToast("No user records found!", "error");
+          showToast("No registered users found!", "error");
           btn.innerHTML = '<span>SIGN IN</span> <i class="fa-solid fa-arrow-right"></i>';
           btn.disabled = false;
         }
@@ -804,11 +809,11 @@
       }
     });
 
-    // 6. OTP Trigger Modal
+    // 6. OTP Modal Trigger
     document.getElementById('btnOtpTrigger').addEventListener('click', () => {
       const userInput = document.getElementById('loginUserInput').value.trim();
       if (!userInput) {
-        showToast("Please enter Mobile or Email first!", "error");
+        showToast("Please enter Mobile or Email ID first!", "error");
         return;
       }
 
@@ -827,7 +832,7 @@
       boxes.forEach(b => otpVal += b.value);
 
       if (otpVal.length < 6) {
-        showToast("Enter full 6-digit OTP", "error");
+        showToast("Please enter complete 6-digit OTP", "error");
         return;
       }
 
@@ -862,6 +867,7 @@
       }
     });
 
+    // Auto Focus Next Field in OTP Boxes
     const boxes = document.querySelectorAll('.otp-box');
     boxes.forEach((box, idx) => {
       box.addEventListener('keyup', (e) => {
@@ -869,14 +875,14 @@
       });
     });
 
-    // 7. Actions
+    // 7. Extra Action Triggers
     document.getElementById('btnForgotPass').addEventListener('click', (e) => {
       e.preventDefault();
       showToast('Reset password link sent to registered email/phone!', 'success');
     });
 
     document.getElementById('btnGoogleLogin').addEventListener('click', () => {
-      showToast('Google Login Initiated...', 'success');
+      showToast('Google Authentication Initiated...', 'success');
     });
   </script>
 </body>
