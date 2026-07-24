@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>DWC Study - Registration</title>
   
   <!-- Font Awesome Icons & Google Fonts -->
@@ -11,35 +11,27 @@
 
   <style>
     /* ==========================================================================
-       1. ULTRA-FUTURISTIC WHITE, BLUE & PURPLE HYBRID THEME VARIABLES
+       1. ADVANCED BLUE-PURPLE WHITE LIGHT THEME (ANDROID WEBVIEW OPTIMIZED)
        ========================================================================== */
     :root {
-      --primary-gradient: linear-gradient(135deg, #2563eb 0%, #4f46e5 50%, #7c3aed 100%);
-      --accent-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
-      --glow-gradient: linear-gradient(135deg, rgba(37, 99, 235, 0.4), rgba(124, 58, 237, 0.4));
-      
-      --blue-primary: #2563eb;
-      --blue-deep: #1e3a8a;
-      --purple-accent: #7c3aed;
-      --purple-light: #f3e8ff;
+      --primary-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      --primary-color: #2563eb;
+      --purple-color: #7c3aed;
+      --indigo-dark: #0f172a;
       --blue-light: #eff6ff;
-      --cyan-glow: #06b6d4;
-      
-      --bg-surface: #f8fafc;
-      --card-bg: rgba(255, 255, 255, 0.92);
-      --border-color: rgba(99, 102, 241, 0.25);
-      --border-glow: rgba(124, 58, 237, 0.4);
-      
+      --purple-light: #f5f3ff;
+      --border-color: #cbd5e1;
+      --border-focus: #3b82f6;
+      --input-bg: #f8fafc;
+      --card-bg: #ffffff;
       --text-main: #0f172a;
       --text-muted: #64748b;
-      
-      --radius-sm: 12px;
-      --radius-md: 18px;
-      --radius-lg: 28px;
-      
-      --shadow-neon: 0 10px 30px -5px rgba(37, 99, 235, 0.3), 0 0 15px rgba(124, 58, 237, 0.2);
-      --shadow-card: 0 20px 50px -10px rgba(30, 58, 138, 0.12), 0 0 20px rgba(99, 102, 241, 0.08);
-      
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --shadow-glow: 0 10px 25px -5px rgba(37, 99, 235, 0.25);
+      --shadow-card: 0 15px 35px -10px rgba(15, 23, 42, 0.08);
       --font-heading: 'Plus Jakarta Sans', sans-serif;
       --font-body: 'Inter', sans-serif;
     }
@@ -50,48 +42,23 @@
       box-sizing: border-box;
       font-family: var(--font-body);
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    input, button, select {
+      user-select: auto;
     }
 
     body {
-      background: #f1f5f9;
+      background: #ffffff;
       color: var(--text-main);
       display: flex;
       justify-content: center;
       align-items: flex-start;
       min-height: 100vh;
-      padding: 16px 0;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    /* Animated Glowing Background Spheres */
-    .bg-sphere {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      z-index: 0;
-      pointer-events: none;
-      animation: floatAnimation 8s ease-in-out infinite alternate;
-    }
-    .sphere-1 {
-      width: 300px;
-      height: 300px;
-      background: rgba(37, 99, 235, 0.25);
-      top: -50px;
-      left: -50px;
-    }
-    .sphere-2 {
-      width: 350px;
-      height: 350px;
-      background: rgba(124, 58, 237, 0.2);
-      bottom: -80px;
-      right: -50px;
-      animation-delay: -4s;
-    }
-
-    @keyframes floatAnimation {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(30px, 40px) scale(1.1); }
+      padding: 12px 0;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior-y: none;
     }
 
     .app-screen {
@@ -102,11 +69,10 @@
       flex-direction: column;
       gap: 16px;
       position: relative;
-      z-index: 1;
     }
 
     /* ==========================================================================
-       2. TOP CENTER FUTURISTIC TOAST NOTIFICATION
+       2. TOP CENTER TOAST NOTIFICATION
        ========================================================================== */
     .toast-container-center {
       position: fixed;
@@ -121,11 +87,11 @@
 
     .toast-msg {
       pointer-events: auto;
-      background: rgba(15, 23, 42, 0.9);
+      background: var(--primary-gradient);
       color: #ffffff;
-      padding: 14px 22px;
+      padding: 14px 20px;
       border-radius: var(--radius-md);
-      box-shadow: var(--shadow-neon);
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.35);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -133,21 +99,20 @@
       font-family: var(--font-heading);
       font-size: 13px;
       font-weight: 700;
-      letter-spacing: 0.3px;
-      border: 1px solid rgba(59, 130, 246, 0.5);
-      animation: slideDownCenter 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      backdrop-filter: blur(12px);
+      letter-spacing: 0.2px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: slideDownCenter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      backdrop-filter: blur(10px);
     }
 
     .toast-msg.error {
-      background: rgba(153, 27, 27, 0.95);
-      border-color: #f87171;
-      box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4);
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      box-shadow: 0 12px 30px rgba(220, 38, 38, 0.35);
     }
 
     @keyframes slideDownCenter {
-      from { opacity: 0; transform: translateY(-40px) scale(0.9); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+      from { opacity: 0; transform: translate(-50%, -30px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
     }
 
     /* ==========================================================================
@@ -163,23 +128,20 @@
       width: 42px;
       height: 42px;
       border-radius: 50%;
-      background: #ffffff;
-      border: 1.5px solid var(--border-color);
-      color: var(--blue-deep);
+      background: var(--blue-light);
+      border: 1px solid var(--border-color);
+      color: var(--primary-color);
       font-size: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
     }
 
-    .btn-icon-back:hover {
-      transform: translateY(-2px) scale(1.05);
-      border-color: var(--blue-primary);
-      color: var(--blue-primary);
-      box-shadow: var(--shadow-neon);
+    .btn-icon-back:active {
+      transform: scale(0.92);
+      background: #dbeafe;
     }
 
     .lang-selector-wrapper { position: relative; }
@@ -190,64 +152,52 @@
       gap: 8px;
       background: #ffffff;
       border: 1.5px solid var(--border-color);
-      padding: 8px 18px;
+      padding: 8px 16px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 700;
-      color: var(--blue-deep);
+      color: var(--indigo-dark);
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
-    }
-
-    .lang-selector:hover {
-      border-color: var(--purple-accent);
-      box-shadow: var(--shadow-neon);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
     }
 
     .lang-dropdown {
       position: absolute;
-      top: 115%;
+      top: 110%;
       right: 0;
-      width: 200px;
-      max-height: 250px;
+      width: 190px;
+      max-height: 240px;
       overflow-y: auto;
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(12px);
+      background: #ffffff;
       border: 1.5px solid var(--border-color);
       border-radius: var(--radius-md);
-      box-shadow: 0 20px 40px rgba(30, 58, 138, 0.2);
+      box-shadow: 0 15px 35px rgba(15, 23, 42, 0.15);
       display: none;
       z-index: 100;
-      animation: fadeIn 0.2s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
+      -webkit-overflow-scrolling: touch;
     }
 
     .lang-dropdown.show { display: block; }
 
     .lang-option {
-      padding: 10px 16px;
+      padding: 12px 14px;
       font-size: 12px;
-      color: var(--text-main);
+      color: #334155;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-weight: 600;
-      transition: background 0.2s ease;
+      border-bottom: 1px solid #f1f5f9;
     }
 
-    .lang-option:hover {
+    .lang-option:hover, .lang-option:active {
       background: var(--blue-light);
-      color: var(--blue-primary);
+      color: var(--primary-color);
     }
 
     /* ==========================================================================
-       4. HERO BANNER WITH GLOWING LOGO & FUTURISTIC HEADINGS
+       4. HERO BANNER WITH LOGO & HEADING
        ========================================================================== */
     .hero-section {
       display: flex;
@@ -259,14 +209,14 @@
     .brand-header {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       margin-bottom: 12px;
     }
 
     .circle-logo-container {
       position: relative;
-      width: 56px;
-      height: 56px;
+      width: 54px;
+      height: 54px;
       flex-shrink: 0;
     }
 
@@ -278,14 +228,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: var(--shadow-neon);
+      box-shadow: var(--shadow-glow);
       overflow: hidden;
       border: 3px solid #ffffff;
-      transition: transform 0.3s ease;
-    }
-
-    .circle-logo-container:hover .brand-logo-icon {
-      transform: rotate(5deg) scale(1.05);
     }
 
     .brand-logo-icon img {
@@ -301,7 +246,7 @@
       right: -2px;
       width: 22px;
       height: 22px;
-      background: var(--purple-accent);
+      background: var(--purple-color);
       color: #ffffff;
       border-radius: 50%;
       display: flex;
@@ -310,20 +255,14 @@
       font-size: 10px;
       cursor: pointer;
       border: 2px solid #ffffff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      transition: all 0.2s ease;
-    }
-
-    .upload-camera-badge:hover {
-      transform: scale(1.2);
-      background: var(--blue-primary);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
 
     #imageUploadInput { display: none; }
 
     .brand-title {
       font-family: var(--font-heading);
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
       background: var(--primary-gradient);
       -webkit-background-clip: text;
@@ -333,22 +272,22 @@
 
     .brand-tagline {
       font-size: 10px;
-      color: var(--purple-accent);
-      font-weight: 800;
+      color: var(--purple-color);
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
 
     .main-heading {
       font-family: var(--font-heading);
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 800;
-      color: var(--blue-deep);
+      color: var(--indigo-dark);
       line-height: 1.2;
     }
 
     .main-heading span {
-      background: var(--accent-gradient);
+      background: var(--primary-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -362,29 +301,21 @@
 
     .hero-illustration {
       width: 120px;
-      height: 120px;
+      height: 110px;
       flex-shrink: 0;
-      animation: pulseGlow 4s ease-in-out infinite alternate;
-    }
-
-    @keyframes pulseGlow {
-      from { transform: scale(1); filter: drop-shadow(0 0 5px rgba(37,99,235,0.2)); }
-      to { transform: scale(1.05); filter: drop-shadow(0 0 15px rgba(124,58,237,0.4)); }
     }
 
     /* ==========================================================================
        5. TRUST BADGES
        ========================================================================== */
     .trust-badges-card {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(10px);
+      background: var(--blue-light);
       border-radius: var(--radius-md);
-      padding: 12px 14px;
+      padding: 12px;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 6px;
-      border: 1.5px solid var(--border-color);
-      box-shadow: var(--shadow-card);
+      border: 1px solid #dbeafe;
     }
 
     .badge-item {
@@ -394,79 +325,66 @@
     }
 
     .badge-icon {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      background: var(--blue-light);
-      color: var(--blue-primary);
+      background: #ffffff;
+      color: var(--primary-color);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
-      transition: all 0.3s ease;
-    }
-
-    .badge-item:hover .badge-icon {
-      background: var(--primary-gradient);
-      color: #ffffff;
-      transform: scale(1.1) rotate(10deg);
+      font-size: 13px;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
     }
 
     .badge-text-title {
       font-family: var(--font-heading);
       font-size: 11px;
-      font-weight: 800;
-      color: var(--blue-deep);
+      font-weight: 700;
+      color: var(--indigo-dark);
     }
 
     .badge-text-sub {
       font-size: 9px;
       color: var(--text-muted);
-      font-weight: 600;
     }
 
     /* ==========================================================================
-       6. MAIN FORM CARD WITH GLASS EFFECT & SHIMMER HOVER
+       6. FORM CARD & INPUTS
        ========================================================================== */
     .form-card {
       background: var(--card-bg);
-      backdrop-filter: blur(16px);
       border-radius: var(--radius-lg);
-      padding: 24px 20px;
-      border: 1.5px solid var(--border-color);
+      padding: 22px 18px;
+      border: 1.5px solid #e2e8f0;
       box-shadow: var(--shadow-card);
-      transition: border-color 0.3s ease;
-    }
-
-    .form-card:hover {
-      border-color: rgba(124, 58, 237, 0.4);
     }
 
     .section-header {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 10px;
+      margin-bottom: 18px;
     }
 
     .section-icon-badge {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       background: var(--primary-gradient);
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
-      box-shadow: var(--shadow-neon);
+      font-size: 15px;
+      box-shadow: var(--shadow-glow);
     }
 
     .section-title {
       font-family: var(--font-heading);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
-      color: var(--blue-deep);
+      color: var(--indigo-dark);
     }
 
     .section-subtitle {
@@ -477,7 +395,7 @@
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 12px;
     }
 
@@ -489,30 +407,24 @@
       position: relative;
       display: flex;
       align-items: center;
-      background: #f8fafc;
+      background: var(--input-bg);
       border: 1.5px solid var(--border-color);
       border-radius: var(--radius-md);
       height: 50px;
-      padding: 0 16px;
-      transition: all 0.3s ease;
+      padding: 0 14px;
+      transition: all 0.25s ease;
     }
 
     .input-wrapper:focus-within {
-      border-color: var(--blue-primary);
+      border-color: var(--border-focus);
       background: #ffffff;
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15), var(--shadow-neon);
-      transform: translateY(-1px);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
     }
 
     .input-wrapper i.leading-icon {
-      color: var(--purple-accent);
-      font-size: 16px;
-      margin-right: 12px;
-      transition: color 0.3s ease;
-    }
-
-    .input-wrapper:focus-within i.leading-icon {
-      color: var(--blue-primary);
+      color: var(--primary-color);
+      font-size: 15px;
+      margin-right: 10px;
     }
 
     .input-wrapper input {
@@ -522,7 +434,7 @@
       background: transparent;
       font-size: 13px;
       font-weight: 600;
-      color: var(--text-main);
+      color: var(--indigo-dark);
     }
 
     .strength-bar-container {
@@ -537,7 +449,7 @@
     .strength-bar {
       height: 100%;
       width: 0%;
-      transition: all 0.4s ease;
+      transition: all 0.3s ease;
     }
 
     /* ==========================================================================
@@ -546,47 +458,47 @@
     .role-section-label {
       font-family: var(--font-heading);
       font-size: 12px;
-      font-weight: 800;
-      color: var(--blue-deep);
-      margin: 16px 0 10px 0;
+      font-weight: 700;
+      color: var(--indigo-dark);
+      margin: 16px 0 8px 0;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .role-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 18px;
+      gap: 8px;
+      margin-bottom: 16px;
     }
 
     .role-card {
       position: relative;
       border: 1.5px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 14px 8px;
+      padding: 12px 6px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       cursor: pointer;
       background: #ffffff;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
     }
 
     .role-card input[type="radio"] { position: absolute; opacity: 0; }
 
-    .role-icon { font-size: 22px; color: var(--text-muted); transition: all 0.3s ease; }
+    .role-icon { font-size: 22px; color: var(--text-muted); }
 
-    .role-name { font-size: 11px; font-weight: 700; color: var(--blue-deep); }
+    .role-name { font-size: 11px; font-weight: 700; color: var(--indigo-dark); }
 
     .check-badge {
       position: absolute;
       top: 6px;
       right: 6px;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       border: 1px solid #cbd5e1;
       display: flex;
@@ -595,50 +507,42 @@
       font-size: 9px;
       color: #ffffff;
       background: #ffffff;
-      transition: all 0.3s ease;
-    }
-
-    .role-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--blue-primary);
     }
 
     .role-card.selected {
-      border-color: var(--blue-primary);
+      border-color: var(--primary-color);
       background: var(--blue-light);
-      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
     }
 
-    .role-card.selected .role-icon, .role-card.selected .role-name { color: var(--blue-primary); }
+    .role-card.selected .role-icon, .role-card.selected .role-name { color: var(--primary-color); }
 
     .role-card.selected .check-badge {
-      background: var(--blue-primary);
-      border-color: var(--blue-primary);
+      background: var(--primary-color);
+      border-color: var(--primary-color);
     }
 
     /* ==========================================================================
-       8. BUTTONS & SOCIALS WITH RIPPLE & HOVER GLOW
+       8. BUTTONS & FOOTER
        ========================================================================== */
     .terms-wrapper {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 18px;
+      gap: 8px;
+      margin-bottom: 16px;
     }
 
     .custom-checkbox {
       width: 18px;
       height: 18px;
-      accent-color: var(--blue-primary);
+      accent-color: var(--primary-color);
       cursor: pointer;
     }
 
     .terms-text { font-size: 11px; color: var(--text-muted); font-weight: 500; }
 
-    .terms-text a { color: var(--blue-primary); text-decoration: none; font-weight: 700; }
+    .terms-text a { color: var(--primary-color); text-decoration: none; font-weight: 700; }
 
     .btn-submit {
-      position: relative;
       width: 100%;
       height: 52px;
       background: var(--primary-gradient);
@@ -646,39 +550,33 @@
       border: none;
       border-radius: var(--radius-md);
       font-family: var(--font-heading);
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       cursor: pointer;
-      box-shadow: var(--shadow-neon);
-      overflow: hidden;
-      transition: all 0.3s ease;
+      box-shadow: var(--shadow-glow);
+      transition: transform 0.1s ease;
     }
 
-    .btn-submit:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 35px rgba(37, 99, 235, 0.4), 0 0 20px rgba(124, 58, 237, 0.4);
-    }
-
-    .btn-submit:active { transform: translateY(0) scale(0.98); }
+    .btn-submit:active { transform: scale(0.98); }
 
     .divider-box {
       display: flex;
       align-items: center;
-      margin: 22px 0;
+      margin: 20px 0;
     }
 
     .divider-line { flex: 1; height: 1px; background: #e2e8f0; }
 
-    .divider-text { padding: 0 12px; font-size: 11px; font-weight: 800; color: #94a3b8; }
+    .divider-text { padding: 0 10px; font-size: 11px; font-weight: 700; color: #94a3b8; }
 
     .social-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 10px;
     }
 
     .btn-social {
@@ -689,18 +587,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      font-size: 13px;
+      gap: 8px;
+      font-size: 12px;
       font-weight: 700;
-      color: var(--blue-deep);
+      color: var(--indigo-dark);
       cursor: pointer;
-      transition: all 0.3s ease;
     }
 
-    .btn-social:hover {
-      transform: translateY(-2px);
-      border-color: var(--purple-accent);
-      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.15);
+    .btn-social:active {
+      background: var(--input-bg);
+      transform: scale(0.98);
     }
 
     .login-footer-link {
@@ -712,23 +608,13 @@
     }
 
     .login-footer-link a {
-      color: var(--blue-primary);
+      color: var(--primary-color);
       font-weight: 800;
       text-decoration: none;
-      transition: color 0.2s ease;
-    }
-
-    .login-footer-link a:hover {
-      color: var(--purple-accent);
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-
-  <!-- Background Glowing Spheres -->
-  <div class="bg-sphere sphere-1"></div>
-  <div class="bg-sphere sphere-2"></div>
 
   <!-- Top Center Toast Notification Slot -->
   <div class="toast-container-center" id="toastContainer"></div>
@@ -737,7 +623,7 @@
     
     <!-- Top Nav with Languages -->
     <div class="top-nav">
-      <button class="btn-icon-back" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
+      <button class="btn-icon-back" onclick="window.history.back()"><i class="fa-solid fa-arrow-left"></i></button>
 
       <div class="lang-selector-wrapper">
         <div class="lang-selector" id="langSelectorBtn">
@@ -796,7 +682,7 @@
           <rect x="30" y="145" width="120" height="12" rx="2" fill="#7C3AED"/>
           <rect x="35" y="147" width="110" height="8" fill="#FFFFFF" opacity="0.9"/>
           <path d="M100 45 L165 65 L100 85 L35 65 Z" fill="#3B82F6"/>
-          <path d="M100 45 L165 65 L100 70 L35 65 Z" fill="#06B6D4"/>
+          <path d="M100 45 L165 65 L100 70 L35 65 Z" fill="#8B5CF6"/>
         </svg>
       </div>
     </div>
@@ -929,12 +815,12 @@
       </div>
 
       <div class="social-grid">
-        <button class="btn-social" id="btnGoogleLogin">
+        <button class="btn-social" id="btnGoogleLogin" type="button">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
           Google
         </button>
 
-        <button class="btn-social" id="btnFacebookLogin">
+        <button class="btn-social" id="btnFacebookLogin" type="button">
           <i class="fa-brands fa-facebook" style="color: #1877f2; font-size: 18px;"></i>
           Facebook
         </button>
@@ -949,32 +835,19 @@
     </div>
   </div>
 
-  <!-- FIREBASE MODULE -->
+  <!-- FIREBASE & FIRESTORE INTEGRATION MODULE -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAHw2ceBKirLjpBx0soxJD0GHWwXnrxo4Y",
-      authDomain: "thar-e5879.firebaseapp.com",
-      databaseURL: "https://thar-e5879-default-rtdb.firebaseio.com",
-      projectId: "thar-e5879",
-      storageBucket: "thar-e5879.firebasestorage.app",
-      messagingSenderId: "1004657134263",
-      appId: "1:1004657134263:web:a2d8844554000981659b32"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const database = getDatabase(app);
+    // Aapki Apni Config File Import
+    import { auth, db } from "./firebase.js";
+    import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     let profileImageData = "";
 
     // TOP CENTER TOAST NOTIFICATION FUNCTION
     function showCenterToast(message, isSuccess = true) {
       const container = document.getElementById('toastContainer');
-      container.innerHTML = ""; 
+      container.innerHTML = ""; // Clear existing
 
       const toast = document.createElement('div');
       toast.className = `toast-msg ${isSuccess ? '' : 'error'}`;
@@ -984,13 +857,12 @@
 
       setTimeout(() => {
         toast.style.opacity = '0';
-        toast.style.transform = 'translateY(-20px) scale(0.9)';
-        toast.style.transition = 'all 0.4s ease';
-        setTimeout(() => toast.remove(), 400);
+        toast.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
       }, 3500);
     }
 
-    // Profile Image Attach
+    // Profile Image Base64 Convert
     const imageUploadInput = document.getElementById('imageUploadInput');
     const circleAvatarPreview = document.getElementById('circleAvatarPreview');
 
@@ -1005,13 +877,13 @@
         reader.onload = function(evt) {
           profileImageData = evt.target.result;
           circleAvatarPreview.src = profileImageData;
-          showCenterToast("Profile image updated successfully!");
+          showCenterToast("Profile image attached successfully!");
         };
         reader.readAsDataURL(file);
       }
     });
 
-    // Form Submit Handler & Redirect
+    // Form Submit Handler (FIRESTORE INTEGRATION)
     const registerForm = document.getElementById('registerForm');
     const btnSubmitText = document.getElementById('btnSubmitText');
 
@@ -1034,21 +906,37 @@
       try {
         btnSubmitText.textContent = "Processing...";
 
+        // 1. Firebase Authentication
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        await set(ref(database, 'users/' + user.uid), {
+        // 2. Firestore Document Entry with Role
+        await setDoc(doc(db, "users", user.uid), {
           uid: user.uid,
-          fullName, userName, email, mobile, role,
+          fullName: fullName,
+          userName: userName,
+          email: email,
+          mobile: mobile,
+          role: role, // 'student', 'teacher', ya 'other'
           profileImage: profileImageData || "logo.png",
           createdAt: new Date().toISOString()
         });
 
+        // Top Center Success Toast
         showCenterToast("Registration Successful! Redirecting...", true);
         btnSubmitText.textContent = "Registered!";
 
+        // Role-Based Redirection System
         setTimeout(() => {
-          window.location.href = "login.html";
+          if (role === "student") {
+            window.location.href = "student-dashboard.html";
+          } else if (role === "teacher") {
+            window.location.href = "teacher-dashboard.html";
+          } else if (role === "other") {
+            window.location.href = "other-dashboard.html";
+          } else {
+            window.location.href = "login.html";
+          }
         }, 1800);
 
       } catch (error) {
@@ -1057,12 +945,32 @@
       }
     });
 
-    // Google Sign in
+    // Google Sign in (With Firestore Auto-Role Entry)
     document.getElementById('btnGoogleLogin').addEventListener('click', async () => {
       try {
-        const result = await signInWithPopup(auth, new GoogleAuthProvider());
-        showCenterToast(`Welcome ${result.user.displayName}! Redirecting...`, true);
-        setTimeout(() => window.location.href = "login.html", 1500);
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        // Default Student role for Google Login if not selected
+        const role = document.querySelector('input[name="userRole"]:checked')?.value || "student";
+
+        await setDoc(doc(db, "users", user.uid), {
+          uid: user.uid,
+          fullName: user.displayName || "Google User",
+          userName: user.email.split('@')[0],
+          email: user.email,
+          mobile: user.phoneNumber || "",
+          role: role,
+          profileImage: user.photoURL || "logo.png",
+          createdAt: new Date().toISOString()
+        }, { merge: true });
+
+        showCenterToast(`Welcome ${user.displayName}! Redirecting...`, true);
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1500);
+
       } catch (err) {
         showCenterToast(err.message, false);
       }
@@ -1091,28 +999,7 @@
       else bar.style.background = '#10b981';
     });
 
-    // Multi-Language Translation System
-    const translations = {
-      en: {
-        heading: 'Create <span>Your Account</span>', subheading: 'Join millions of learners and start your learning journey today.',
-        secTitle: 'Personal Information', secSubTitle: 'Fill in your basic details to get started',
-        lblRole: 'I am a', roleStudent: 'Student', roleTeacher: 'Teacher', roleOther: 'Other',
-        btnSubmit: 'Create Account', haveAccount: 'Already have an account?', login: 'Login'
-      },
-      hi: {
-        heading: 'अपना <span>खाता बनाएं</span>', subheading: 'लाखों शिक्षार्थियों के साथ जुड़ें और अपनी शिक्षा यात्रा शुरू करें।',
-        secTitle: 'व्यक्तिगत जानकारी', secSubTitle: 'शुरू करने के लिए अपनी मूल जानकारी भरें',
-        lblRole: 'मैं हूँ एक', roleStudent: 'छात्र', roleTeacher: 'शिक्षक', roleOther: 'अन्य',
-        btnSubmit: 'खाता बनाएं', haveAccount: 'क्या आपके पास पहले से एक खाता मौजूद है?', login: 'लॉगिन'
-      },
-      mr: {
-        heading: 'तुमचे <span>खाते तयार करा</span>', subheading: 'लाखो विद्यार्थ्यांसोबत जुडा आणि तुमचा शिकण्याचा प्रवास सुरू करा.',
-        secTitle: 'वैयक्तिक माहिती', secSubTitle: 'सुरू करण्यासाठी तुमची मूलभूत माहिती भरा',
-        lblRole: 'मी आहे', roleStudent: 'विद्यार्थी', roleTeacher: 'शिक्षक', roleOther: 'इतर',
-        btnSubmit: 'खाते तयार करा', haveAccount: 'आधीच खाते आहे?', login: 'लॉगिन'
-      }
-    };
-
+    // Multi-Language Selector Dropdown Handler
     const langSelectorBtn = document.getElementById('langSelectorBtn');
     const langDropdown = document.getElementById('langDropdown');
 
@@ -1126,19 +1013,6 @@
     function changeLanguage(langCode, langName) {
       document.getElementById('currentLangText').textContent = langName;
       langDropdown.classList.remove('show');
-
-      const data = translations[langCode] || translations['en'];
-      document.getElementById('txtMainHeading').innerHTML = data.heading;
-      document.getElementById('txtSubHeading').textContent = data.subheading;
-      document.getElementById('secTitle').textContent = data.secTitle;
-      document.getElementById('secSubTitle').textContent = data.secSubTitle;
-      document.getElementById('lblRole').textContent = data.lblRole;
-      document.getElementById('roleStudent').textContent = data.roleStudent;
-      document.getElementById('roleTeacher').textContent = data.roleTeacher;
-      document.getElementById('roleOther').textContent = data.roleOther;
-      document.getElementById('btnSubmitText').textContent = data.btnSubmit;
-      document.getElementById('txtHaveAccount').textContent = data.haveAccount;
-      document.getElementById('linkLogin').textContent = data.login;
     }
     window.changeLanguage = changeLanguage;
   </script>
