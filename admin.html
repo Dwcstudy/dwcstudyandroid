@@ -2,30 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <!-- Android WebView Optimization & Anti-Zoom -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>DWC Study - Power Admin Control Panel</title>
+  <title>DWC Study - Secure Admin Hub</title>
 
-  <!-- Font Awesome Icons & Google Fonts -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Premium Fonts & Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
+      --primary: #3b82f6;
       --primary-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
-      --primary-color: #2563eb;
-      --purple-color: #7c3aed;
-      --indigo-dark: #0f172a;
-      --blue-light: #eff6ff;
-      --purple-light: #f5f3ff;
-      --border-color: #cbd5e1;
-      --input-bg: #f8fafc;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
+      --bg-dark: #090d16;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-card-hover: rgba(51, 65, 85, 0.8);
+      --border-line: rgba(255, 255, 255, 0.12);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
       --radius-sm: 10px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --shadow-glow: 0 10px 25px -5px rgba(37, 99, 235, 0.25);
-      --shadow-card: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
+      --radius-md: 16px;
+      --radius-lg: 24px;
       --font-heading: 'Plus Jakarta Sans', sans-serif;
       --font-body: 'Inter', sans-serif;
     }
@@ -39,258 +36,384 @@
       user-select: none;
     }
 
-    input, select, button, textarea {
+    input, select, button {
       user-select: auto;
+      outline: none;
     }
 
     body {
-      background: #f8fafc;
+      background: var(--bg-dark);
       color: var(--text-main);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(124, 58, 237, 0.15) 0px, transparent 50%);
     }
 
-    /* Toast Center */
-    .toast-container-center {
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+
+    /* Toast Notification Center */
+    .toast-center {
       position: fixed;
       top: max(16px, env(safe-area-inset-top));
       left: 50%;
       transform: translateX(-50%);
       z-index: 99999;
-      width: 92%;
-      max-width: 420px;
+      width: 90%;
+      max-width: 400px;
       pointer-events: none;
     }
 
-    .toast-msg {
+    .toast-card {
       pointer-events: auto;
-      background: var(--primary-gradient);
-      color: #ffffff;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-line);
+      backdrop-filter: blur(16px);
+      color: #fff;
       padding: 12px 18px;
       border-radius: var(--radius-md);
-      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      animation: slideDown 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .toast-card.success { border-left: 4px solid #10b981; }
+    .toast-card.error { border-left: 4px solid #ef4444; }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translate(-50%, -20px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    /* ======================================================== */
+    /* 1. FULL-PAGE ADMIN LOGIN SCREEN                          */
+    /* ======================================================== */
+    .fullpage-login {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg-dark);
+      z-index: 10000;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      font-family: var(--font-heading);
-      font-size: 13px;
-      font-weight: 700;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      animation: slideDownCenter 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      padding: 20px;
+      background-image: radial-gradient(circle at center, rgba(37, 99, 235, 0.25) 0%, transparent 70%);
+      transition: opacity 0.4s ease, visibility 0.4s ease;
     }
 
-    .toast-msg.error {
-      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-      box-shadow: 0 12px 30px rgba(220, 38, 38, 0.35);
+    .fullpage-login.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
     }
 
-    @keyframes slideDownCenter {
-      from { opacity: 0; transform: translateY(-25px) scale(0.95); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(24px);
+      border-radius: var(--radius-lg);
+      padding: 32px 24px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+      text-align: center;
     }
 
-    /* Top Navbar */
-    .admin-navbar {
-      background: #ffffff;
-      border-bottom: 1.5px solid #e2e8f0;
-      padding: max(14px, env(safe-area-inset-top)) 16px 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    }
-
-    .brand-block {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-logo-icon {
-      width: 42px;
-      height: 42px;
+    .login-icon-badge {
+      width: 68px;
+      height: 68px;
       background: var(--primary-gradient);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #ffffff;
-      font-size: 18px;
-      box-shadow: var(--shadow-glow);
+      font-size: 26px;
+      margin: 0 auto 18px auto;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
     }
 
-    .brand-title {
+    .login-title {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .login-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      margin-bottom: 28px;
+    }
+
+    .field-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .field-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .field-input-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .field-input-box i {
+      position: absolute;
+      left: 14px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .field-input-box input {
+      width: 100%;
+      height: 48px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1.5px solid var(--border-line);
+      border-radius: var(--radius-md);
+      padding: 0 14px 0 42px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .field-input-box input:focus {
+      border-color: var(--primary);
+      background: rgba(15, 23, 42, 0.95);
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.25);
+    }
+
+    .btn-login-action {
+      width: 100%;
+      height: 50px;
+      background: var(--primary-gradient);
+      border: none;
+      border-radius: var(--radius-md);
+      color: #fff;
+      font-family: var(--font-heading);
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn-login-action:active { transform: scale(0.98); }
+
+    /* ======================================================== */
+    /* 2. ADMIN DASHBOARD PAGE (LOCKED UNTIL LOGIN)            */
+    /* ======================================================== */
+    .admin-dashboard {
+      display: none; /* Login hone ke baad hi visible hoga */
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .admin-dashboard.active {
+      display: flex;
+    }
+
+    /* Top App Navigation */
+    .app-header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-line);
+      padding: max(12px, env(safe-area-inset-top)) 16px 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 500;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo {
+      width: 38px;
+      height: 38px;
+      background: var(--primary-gradient);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .header-title {
       font-family: var(--font-heading);
       font-size: 16px;
       font-weight: 800;
-      background: var(--primary-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #fff;
     }
 
-    .brand-badge {
-      background: var(--purple-light);
-      color: var(--purple-color);
-      font-size: 9px;
-      font-weight: 800;
-      padding: 2px 7px;
-      border-radius: 10px;
-      text-transform: uppercase;
-      border: 1px solid #e9d5ff;
+    .btn-logout {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     /* Main Container */
-    .admin-container {
+    .main-layout {
+      padding: 16px;
       max-width: 1400px;
       width: 100%;
       margin: 0 auto;
-      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
-    /* Analytics Grid System */
-    .analytics-grid {
+    /* Quick Metrics Grid */
+    .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
     }
 
     @media (min-width: 768px) {
-      .analytics-grid { grid-template-columns: repeat(4, 1fr); }
+      .stats-grid { grid-template-columns: repeat(4, 1fr); }
     }
 
-    .analytics-card {
-      background: #ffffff;
-      padding: 14px;
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-line);
+      backdrop-filter: blur(12px);
+      padding: 16px;
       border-radius: var(--radius-md);
-      border: 1.5px solid #e2e8f0;
-      box-shadow: var(--shadow-card);
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
-    .analytics-icon {
+    .stat-icon {
       width: 44px;
       height: 44px;
-      border-radius: 12px;
-      background: var(--blue-light);
-      color: var(--primary-color);
+      border-radius: 14px;
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--primary);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 18px;
-      flex-shrink: 0;
     }
 
-    .analytics-title {
+    .stat-label {
       font-size: 11px;
-      font-weight: 600;
       color: var(--text-muted);
+      font-weight: 600;
     }
 
-    .analytics-value {
+    .stat-number {
       font-family: var(--font-heading);
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 800;
-      color: var(--indigo-dark);
-      margin-top: 1px;
+      color: #fff;
+      margin-top: 2px;
     }
 
-    /* Table Card */
-    .table-card {
-      background: #ffffff;
+    /* Glass Table Module */
+    .data-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-line);
+      backdrop-filter: blur(16px);
       border-radius: var(--radius-lg);
-      border: 1.5px solid #e2e8f0;
-      box-shadow: var(--shadow-card);
       overflow: hidden;
     }
 
-    .table-header-toolbar {
+    .data-toolbar {
       padding: 16px;
-      border-bottom: 1.5px solid #e2e8f0;
+      border-bottom: 1px solid var(--border-line);
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
 
     @media (min-width: 768px) {
-      .table-header-toolbar { flex-direction: row; justify-content: space-between; align-items: center; }
+      .data-toolbar { flex-direction: row; justify-content: space-between; align-items: center; }
     }
 
-    .toolbar-title {
-      font-family: var(--font-heading);
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--indigo-dark);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .toolbar-filters {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .search-input-box {
+    .search-box {
       position: relative;
       flex: 1;
-      min-width: 200px;
     }
 
-    .search-input-box input {
-      width: 100%;
-      height: 42px;
-      padding: 0 12px 0 36px;
-      border-radius: var(--radius-md);
-      border: 1.5px solid var(--border-color);
-      background: var(--input-bg);
-      font-size: 12px;
-      font-weight: 600;
-      outline: none;
-    }
-
-    .search-input-box input:focus {
-      border-color: var(--primary-color);
-      background: #ffffff;
-    }
-
-    .search-input-box i {
+    .search-box i {
       position: absolute;
-      left: 12px;
+      left: 14px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
       font-size: 13px;
     }
 
-    .select-filter {
+    .search-box input {
+      width: 100%;
       height: 42px;
-      padding: 0 10px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-line);
       border-radius: var(--radius-md);
-      border: 1.5px solid var(--border-color);
-      background: var(--input-bg);
+      padding: 0 14px 0 38px;
+      color: #fff;
       font-size: 12px;
-      font-weight: 700;
-      color: var(--indigo-dark);
-      outline: none;
+      font-weight: 600;
     }
 
-    .table-wrapper {
+    .filter-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .filter-select {
+      height: 42px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-line);
+      border-radius: var(--radius-md);
+      color: #fff;
+      padding: 0 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* Data Table Styling */
+    .table-container {
       width: 100%;
       overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
     }
 
     table {
@@ -301,114 +424,67 @@
     }
 
     th {
-      background: #f8fafc;
-      padding: 12px 14px;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 14px 16px;
       font-family: var(--font-heading);
+      font-size: 11px;
       font-weight: 700;
       color: var(--text-muted);
-      border-bottom: 1.5px solid #e2e8f0;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border-line);
       white-space: nowrap;
     }
 
     td {
-      padding: 12px 14px;
-      border-bottom: 1px solid #f1f5f9;
-      color: var(--indigo-dark);
-      font-weight: 600;
-      vertical-align: middle;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      color: var(--text-main);
+      font-weight: 500;
       white-space: nowrap;
     }
 
-    tr:hover { background: #f8fafc; }
+    tr:hover { background: var(--bg-card-hover); }
 
-    .user-profile-cell {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .user-avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: var(--primary-gradient);
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 12px;
-      flex-shrink: 0;
-    }
-
-    .source-badge {
-      font-size: 9px;
-      font-weight: 800;
-      padding: 2px 6px;
-      border-radius: 6px;
-      text-transform: uppercase;
-    }
-    .source-firestore { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
-    .source-rtdb { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
-
-    .role-badge {
+    /* Badges */
+    .badge {
       padding: 3px 8px;
-      border-radius: 14px;
+      border-radius: 20px;
       font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
       display: inline-block;
     }
 
-    .role-student { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
-    .role-teacher { background: #f5f3ff; color: #7c3aed; border: 1px solid #ddd6fe; }
-    .role-admin { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
-    .role-other { background: #fefce8; color: #ca8a04; border: 1px solid #fef08a; }
+    .badge-firestore { background: rgba(234, 88, 12, 0.15); color: #fb923c; border: 1px solid rgba(234, 88, 12, 0.3); }
+    .badge-rtdb { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
 
-    .status-badge {
-      padding: 3px 8px;
-      border-radius: 14px;
-      font-size: 10px;
-      font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
+    .badge-active { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .badge-blocked { background: rgba(239, 68, 68, 0.15); color: #f87171; }
 
-    .status-active { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
-    .status-blocked { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
-
-    .action-btn-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-tbl {
+    .btn-action-icon {
       width: 32px;
       height: 32px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border-color);
-      background: #ffffff;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-line);
       color: var(--text-muted);
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.15s ease;
+      transition: all 0.2s;
     }
 
-    .btn-tbl:active { transform: scale(0.92); }
-    .btn-tbl.delete:hover { background: #fef2f2; color: #dc2626; border-color: #ef4444; }
+    .btn-action-icon:hover { color: #fff; background: rgba(255, 255, 255, 0.15); }
+    .btn-action-icon.del:hover { color: #ef4444; background: rgba(239, 68, 68, 0.15); }
 
-    /* Modal Styling */
+    /* EDIT MODAL */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(4px);
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(8px);
       z-index: 9000;
       display: none;
       align-items: center;
@@ -418,259 +494,227 @@
 
     .modal-overlay.active { display: flex; }
 
-    .modal-card {
+    .modal-box {
       width: 100%;
-      max-width: 480px;
-      background: #ffffff;
+      max-width: 450px;
+      background: #1e293b;
+      border: 1px solid var(--border-line);
       border-radius: var(--radius-lg);
-      padding: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .modal-title {
-      font-family: var(--font-heading);
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--indigo-dark);
-    }
-
-    .form-grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .form-group-modal { margin-bottom: 10px; }
-
-    .form-group-modal label {
-      display: block;
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-    }
-
-    .form-group-modal input, .form-group-modal select {
-      width: 100%;
-      height: 40px;
-      border-radius: var(--radius-md);
-      border: 1.5px solid var(--border-color);
-      padding: 0 10px;
-      font-size: 12px;
-      font-weight: 600;
-      outline: none;
-      background: var(--input-bg);
-    }
-
-    .form-group-modal input:focus, .form-group-modal select:focus {
-      border-color: var(--primary-color);
-      background: #ffffff;
-    }
-
-    .btn-action-primary {
-      background: var(--primary-gradient);
-      color: #ffffff;
-      border: none;
-      padding: 10px 16px;
-      border-radius: var(--radius-md);
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: var(--shadow-glow);
+      padding: 24px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
     }
   </style>
 </head>
 <body>
 
   <!-- Toast Container -->
-  <div class="toast-container-center" id="toastContainer"></div>
+  <div class="toast-center" id="toastCenter"></div>
 
-  <!-- Admin Navigation -->
-  <header class="admin-navbar">
-    <div class="brand-block">
-      <div class="brand-logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
-      <div>
-        <div style="display: flex; align-items: center; gap: 6px;">
-          <span class="brand-title">DWC STUDY</span>
-          <span class="brand-badge">Admin Access</span>
+  <!-- 1. FULL-PAGE DEDICATED ADMIN LOGIN SCREEN -->
+  <div class="fullpage-login" id="fullpageLogin">
+    <div class="login-card">
+      <div class="login-icon-badge"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="login-title">Admin Control</div>
+      <div class="login-sub">DWC Study System Access Engine</div>
+
+      <form id="adminLoginForm">
+        <div class="field-group">
+          <label>Admin Email</label>
+          <div class="field-input-box">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="loginEmail" placeholder="dwcstudy@gmail.com" required />
+          </div>
         </div>
-        <div style="font-size: 9px; color: var(--text-muted); font-weight: 600;">Firestore + Realtime Engine</div>
-      </div>
+
+        <div class="field-group">
+          <label>Admin Password</label>
+          <div class="field-input-box">
+            <i class="fa-solid fa-key"></i>
+            <input type="password" id="loginPassword" placeholder="••••••••" required />
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login-action" id="btnLoginBtn">
+          <span>Authorize Access</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
     </div>
-  </header>
+  </div>
 
-  <!-- Dashboard Container -->
-  <main class="admin-container">
-
-    <!-- Analytics Grid -->
-    <section class="analytics-grid">
-      <div class="analytics-card">
-        <div class="analytics-icon"><i class="fa-solid fa-users"></i></div>
+  <!-- 2. MAIN ADMIN DASHBOARD (UNLOCKED AFTER VERIFICATION) -->
+  <div class="admin-dashboard" id="adminDashboard">
+    
+    <!-- Top Header Navigation Bar -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="header-logo"><i class="fa-solid fa-user-gear"></i></div>
         <div>
-          <div class="analytics-title">Total Users</div>
-          <div class="analytics-value" id="statTotalUsers">0</div>
+          <div class="header-title">DWC Study</div>
+          <div style="font-size: 9px; color: var(--text-muted); font-weight: 700;">Power Admin Mode</div>
         </div>
       </div>
 
-      <div class="analytics-card">
-        <div class="analytics-icon" style="background:#eff6ff; color:#2563eb;"><i class="fa-solid fa-user-graduate"></i></div>
-        <div>
-          <div class="analytics-title">Students</div>
-          <div class="analytics-value" id="statStudents">0</div>
-        </div>
-      </div>
+      <button class="btn-logout" onclick="handleLogout()">
+        <i class="fa-solid fa-power-off"></i> Logout
+      </button>
+    </header>
 
-      <div class="analytics-card">
-        <div class="analytics-icon" style="background:#f5f3ff; color:#7c3aed;"><i class="fa-solid fa-chalkboard-user"></i></div>
-        <div>
-          <div class="analytics-title">Teachers</div>
-          <div class="analytics-value" id="statTeachers">0</div>
-        </div>
-      </div>
+    <!-- App Body Content -->
+    <main class="main-layout">
 
-      <div class="analytics-card">
-        <div class="analytics-icon" style="background:#fff7ed; color:#ea580c;"><i class="fa-solid fa-fire"></i></div>
-        <div>
-          <div class="analytics-title">Firestore</div>
-          <div class="analytics-value" id="statFirestore">0</div>
+      <!-- Analytics Cards -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+          <div>
+            <div class="stat-label">Total Users</div>
+            <div class="stat-number" id="statTotal">0</div>
+          </div>
         </div>
-      </div>
-    </section>
 
-    <!-- Table Section -->
-    <section class="table-card">
-      <div class="table-header-toolbar">
-        <div class="toolbar-title"><i class="fa-solid fa-database" style="color: var(--primary-color);"></i> Live User Database</div>
-        
-        <div class="toolbar-filters">
-          <div class="search-input-box">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(124, 58, 237, 0.15); color: #a78bfa;"><i class="fa-solid fa-user-graduate"></i></div>
+          <div>
+            <div class="stat-label">Students</div>
+            <div class="stat-number" id="statStudents">0</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(234, 88, 12, 0.15); color: #fb923c;"><i class="fa-solid fa-fire"></i></div>
+          <div>
+            <div class="stat-label">Firestore</div>
+            <div class="stat-number" id="statFirestore">0</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: rgba(16, 185, 129, 0.15); color: #34d399;"><i class="fa-solid fa-bolt"></i></div>
+          <div>
+            <div class="stat-label">Realtime DB</div>
+            <div class="stat-number" id="statRTDB">0</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- User Controls Table Area -->
+      <section class="data-card">
+        <div class="data-toolbar">
+          <div class="search-box">
             <i class="fa-solid fa-magnifying-glass"></i>
             <input type="text" id="searchInput" placeholder="Search name, email, phone..." />
           </div>
 
-          <select class="select-filter" id="roleFilter">
-            <option value="ALL">All Roles</option>
-            <option value="student">Student</option>
-            <option value="teacher">Teacher</option>
-            <option value="admin">Admin</option>
-            <option value="other">Other</option>
-          </select>
+          <div class="filter-controls">
+            <select class="filter-select" id="roleFilter">
+              <option value="ALL">All Roles</option>
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+              <option value="admin">Admin</option>
+            </select>
 
-          <select class="select-filter" id="sourceFilter">
-            <option value="ALL">All Sources</option>
-            <option value="firestore">Firestore</option>
-            <option value="rtdb">Realtime DB</option>
-          </select>
+            <select class="filter-select" id="sourceFilter">
+              <option value="ALL">All Sources</option>
+              <option value="firestore">Firestore</option>
+              <option value="rtdb">Realtime DB</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <!-- User Data Table -->
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>User Details</th>
-              <th>Source</th>
-              <th>Contact Info</th>
-              <th>Role</th>
-              <th>Class/Subject</th>
-              <th>Status</th>
-              <th style="text-align: center;">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="userTableBody">
-            <tr>
-              <td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">
-                <i class="fa-solid fa-spinner fa-spin" style="font-size: 20px;"></i> Connecting to Firestore & Database...
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+        <!-- Scrollable Table Body -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>User Details</th>
+                <th>Source</th>
+                <th>Mobile & Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th style="text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="userTableBody">
+              <tr>
+                <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                  <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 24px; margin-bottom: 8px;"></i>
+                  <div>Syncing Database Engines...</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-  </main>
+    </main>
+  </div>
 
-  <!-- Edit User Modal -->
+  <!-- EDIT RECORD MODAL -->
   <div class="modal-overlay" id="editModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-title"><i class="fa-solid fa-user-pen" style="color: var(--primary-color);"></i> Edit Record Controls</div>
-        <button class="btn-tbl" onclick="closeEditModal()">✕</button>
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <div style="font-family: var(--font-heading); font-weight: 800; font-size: 16px; color: #fff;">Edit Record</div>
+        <button class="btn-action-icon" onclick="closeEditModal()">✕</button>
       </div>
 
       <form id="editUserForm">
         <input type="hidden" id="editUserId" />
         <input type="hidden" id="editUserSource" />
 
-        <div class="form-grid-2">
-          <div class="form-group-modal">
-            <label>Full Name</label>
+        <div class="field-group">
+          <label>Full Name</label>
+          <div class="field-input-box">
             <input type="text" id="editFullName" required />
           </div>
-          <div class="form-group-modal">
-            <label>Mobile Number</label>
+        </div>
+
+        <div class="field-group">
+          <label>Mobile Number</label>
+          <div class="field-input-box">
             <input type="text" id="editMobile" required />
           </div>
         </div>
 
-        <div class="form-group-modal">
+        <div class="field-group">
           <label>Email Address</label>
-          <input type="email" id="editEmail" required />
+          <div class="field-input-box">
+            <input type="email" id="editEmail" required />
+          </div>
         </div>
 
-        <div class="form-grid-2">
-          <div class="form-group-modal">
-            <label>User Role</label>
-            <select id="editRole">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="field-group">
+            <label>Role</label>
+            <select class="filter-select" id="editRole" style="width: 100%;">
               <option value="student">Student</option>
               <option value="teacher">Teacher</option>
               <option value="admin">Admin</option>
               <option value="other">Other</option>
             </select>
           </div>
-          <div class="form-group-modal">
+
+          <div class="field-group">
             <label>Status</label>
-            <select id="editStatus">
+            <select class="filter-select" id="editStatus" style="width: 100%;">
               <option value="active">Active</option>
               <option value="blocked">Blocked</option>
             </select>
           </div>
         </div>
 
-        <div class="form-grid-2">
-          <div class="form-group-modal">
-            <label>Class / Target</label>
-            <input type="text" id="editClass" />
-          </div>
-          <div class="form-group-modal">
-            <label>Batch / Subject</label>
-            <input type="text" id="editBatch" />
-          </div>
-        </div>
-
-        <div style="margin-top: 14px; display: flex; gap: 8px;">
-          <button type="submit" class="btn-action-primary" style="flex: 1; height: 42px; justify-content: center;">Save Changes</button>
-          <button type="button" class="btn-tbl" onclick="closeEditModal()" style="height: 42px; width: 70px;">Cancel</button>
+        <div style="margin-top: 16px; display: flex; gap: 10px;">
+          <button type="submit" class="btn-login-action" style="margin: 0; flex: 1;">Save Changes</button>
+          <button type="button" class="btn-action-icon" onclick="closeEditModal()" style="height: 50px; width: 60px;">Cancel</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- FIREBASE ENGINE -->
+  <!-- FIREBASE APPLICATION SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getDatabase, ref, onValue, update as rtdbUpdate, remove as rtdbRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -680,95 +724,140 @@
       projectId: "dwcstudy-ad27f",
       storageBucket: "dwcstudy-ad27f.firebasestorage.app",
       messagingSenderId: "89865011297",
-      appId: "1:89865011297:web:659c58ba10f7d7778a6a20",
-      measurementId: "G-6J3H6T9V8D"
+      appId: "1:89865011297:web:659c58ba10f7d7778a6a20"
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const rtdb = getDatabase(app);
     const fsdb = getFirestore(app);
 
     let mergedUserData = {};
-    let firestoreErrorLogged = false;
 
-    // Toast Function
-    window.showToast = function(msg, isSuccess = true) {
-      const container = document.getElementById('toastContainer');
+    // Native Vibration for Android WebView
+    function triggerHaptic() {
+      if (window.navigator && window.navigator.vibrate) {
+        window.navigator.vibrate(20);
+      }
+    }
+
+    // Dynamic Toast Banner
+    window.showToast = function(message, isSuccess = true) {
+      const container = document.getElementById('toastCenter');
       container.innerHTML = "";
       const toast = document.createElement('div');
-      toast.className = `toast-msg ${isSuccess ? '' : 'error'}`;
-      toast.innerHTML = `<i class="fa-solid ${isSuccess ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> <span>${msg}</span>`;
+      toast.className = `toast-card ${isSuccess ? 'success' : 'error'}`;
+      toast.innerHTML = `<i class="fa-solid ${isSuccess ? 'fa-circle-check' : 'fa-triangle-exclamation'}"></i> <span>${message}</span>`;
       container.appendChild(toast);
       setTimeout(() => { if(toast.parentNode) toast.remove(); }, 3500);
     };
 
-    // 1. Sync Realtime Database
-    const rtdbRef = ref(rtdb, 'users');
-    onValue(rtdbRef, (snapshot) => {
-      const data = snapshot.val() || {};
-      for (let uid in data) {
-        mergedUserData[`rtdb_${uid}`] = {
-          ...data[uid],
-          rawId: uid,
-          source: 'rtdb'
-        };
+    // Listen to Firebase Auth State (Controls Full Screen Login vs Dashboard)
+    onAuthStateChanged(auth, (user) => {
+      const fullpageLogin = document.getElementById('fullpageLogin');
+      const adminDashboard = document.getElementById('adminDashboard');
+
+      if (user && user.email === "dwcstudy@gmail.com") {
+        fullpageLogin.classList.add('hidden');
+        adminDashboard.classList.add('active');
+        startRealtimeEngine();
+      } else {
+        fullpageLogin.classList.remove('hidden');
+        adminDashboard.classList.remove('active');
       }
-      renderTableAndStats();
-    }, (error) => {
-      console.error("RTDB Sync Error:", error);
     });
 
-    // 2. Sync Firestore Database with Permission Error Handler
-    const firestoreUsersRef = collection(fsdb, "users");
-    onSnapshot(firestoreUsersRef, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        const uid = change.doc.id;
-        if (change.type === "removed") {
-          delete mergedUserData[`firestore_${uid}`];
-        } else {
-          mergedUserData[`firestore_${uid}`] = {
-            ...change.doc.data(),
+    // Handle Admin Auth Login
+    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      triggerHaptic();
+      
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+      const btn = document.getElementById('btnLoginBtn');
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...`;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        showToast("Authenticated! Welcome to Admin Engine.");
+      } catch (err) {
+        showToast(err.message, false);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span>Authorize Access</span> <i class="fa-solid fa-arrow-right"></i>`;
+      }
+    });
+
+    // Handle Admin Sign Out
+    window.handleLogout = function() {
+      triggerHaptic();
+      signOut(auth).then(() => {
+        showToast("Logged out successfully");
+      });
+    };
+
+    // Firestore & RTDB Dynamic Data Sync Engine
+    function startRealtimeEngine() {
+      // 1. Fetch Realtime DB Users
+      onValue(ref(rtdb, 'users'), (snapshot) => {
+        const data = snapshot.val() || {};
+        for (let uid in data) {
+          mergedUserData[`rtdb_${uid}`] = {
+            ...data[uid],
             rawId: uid,
-            source: 'firestore'
+            source: 'rtdb'
           };
         }
+        renderDataView();
       });
-      renderTableAndStats();
-    }, (error) => {
-      console.error("Firestore Listener Error:", error);
-      if (!firestoreErrorLogged) {
-        showToast("Firestore Read Permission Denied (Login as Admin or Update Rules)", false);
-        firestoreErrorLogged = true;
-      }
-      renderTableAndStats();
-    });
 
-    // Render Function
-    function renderTableAndStats() {
+      // 2. Fetch Firestore Users
+      onSnapshot(collection(fsdb, "users"), (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          const uid = change.doc.id;
+          if (change.type === "removed") {
+            delete mergedUserData[`firestore_${uid}`];
+          } else {
+            mergedUserData[`firestore_${uid}`] = {
+              ...change.doc.data(),
+              rawId: uid,
+              source: 'firestore'
+            };
+          }
+        });
+        renderDataView();
+      }, (error) => {
+        showToast("Firestore Access Error: " + error.message, false);
+      });
+    }
+
+    // Render Data to UI
+    function renderDataView() {
       const tbody = document.getElementById('userTableBody');
       const searchVal = document.getElementById('searchInput').value.toLowerCase();
       const roleVal = document.getElementById('roleFilter').value;
       const sourceVal = document.getElementById('sourceFilter').value;
 
       tbody.innerHTML = "";
-
-      let total = 0, students = 0, teachers = 0, firestoreCount = 0;
+      let total = 0, students = 0, firestoreCount = 0, rtdbCount = 0;
 
       for (let key in mergedUserData) {
-        const user = mergedUserData[key];
+        const u = mergedUserData[key];
         total++;
 
-        const userRole = user.role || 'student';
-        const userStatus = user.status || 'active';
-        const userSource = user.source;
+        const userRole = u.role || 'student';
+        const userStatus = u.status || 'active';
+        const userSource = u.source;
 
         if (userRole === 'student') students++;
-        if (userRole === 'teacher') teachers++;
         if (userSource === 'firestore') firestoreCount++;
+        if (userSource === 'rtdb') rtdbCount++;
 
-        const name = (user.fullName || user.name || 'N/A').toLowerCase();
-        const email = (user.email || '').toLowerCase();
-        const mobile = (user.mobile || '').toLowerCase();
+        const name = (u.fullName || u.name || 'N/A').toLowerCase();
+        const email = (u.email || '').toLowerCase();
+        const mobile = (u.mobile || '').toLowerCase();
 
         const matchesSearch = name.includes(searchVal) || email.includes(searchVal) || mobile.includes(searchVal);
         const matchesRole = roleVal === 'ALL' || userRole === roleVal;
@@ -778,33 +867,21 @@
           const tr = document.createElement('tr');
           tr.innerHTML = `
             <td>
-              <div class="user-profile-cell">
-                <div class="user-avatar">${(name[0] || 'U').toUpperCase()}</div>
-                <div>
-                  <div style="font-weight:700;">${user.fullName || user.name || 'Unnamed User'}</div>
-                  <div style="font-size:10px; color:var(--text-muted);">ID: ${user.rawId.substring(0, 8)}...</div>
-                </div>
-              </div>
+              <div style="font-weight:700; color:#fff;">${u.fullName || u.name || 'Unnamed'}</div>
+              <div style="font-size:10px; color:var(--text-muted);">ID: ${u.rawId}</div>
             </td>
+            <td><span class="badge badge-${userSource}">${userSource}</span></td>
             <td>
-              <span class="source-badge source-${userSource}">${userSource}</span>
+              <div>${u.mobile || 'N/A'}</div>
+              <div style="font-size:10px; color:var(--text-muted);">${u.email || 'N/A'}</div>
             </td>
+            <td><span style="font-size:11px; text-transform:capitalize;">${userRole}</span></td>
+            <td><span class="badge badge-${userStatus}">${userStatus}</span></td>
             <td>
-              <div>${user.mobile || 'N/A'}</div>
-              <div style="font-size:11px; color:var(--text-muted);">${user.email || 'N/A'}</div>
-            </td>
-            <td><span class="role-badge role-${userRole}">${userRole}</span></td>
-            <td>${user.studentClass || user.subject || 'Standard'}</td>
-            <td>
-              <span class="status-badge status-${userStatus}">
-                <i class="fa-solid fa-circle" style="font-size: 5px;"></i> ${userStatus}
-              </span>
-            </td>
-            <td>
-              <div class="action-btn-group" style="justify-content: center;">
-                <button class="btn-tbl" title="Edit Record" onclick="openEditModal('${key}')"><i class="fa-solid fa-pen"></i></button>
-                <button class="btn-tbl" title="Toggle Block" onclick="toggleBlockUser('${key}')"><i class="fa-solid fa-ban"></i></button>
-                <button class="btn-tbl delete" title="Delete User" onclick="deleteUserRecord('${key}')"><i class="fa-solid fa-trash-can"></i></button>
+              <div style="display:flex; justify-content:center; gap:6px;">
+                <button class="btn-action-icon" onclick="openEditModal('${key}')"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn-action-icon" onclick="toggleBlock('${key}')"><i class="fa-solid fa-ban"></i></button>
+                <button class="btn-action-icon del" onclick="deleteUser('${key}')"><i class="fa-solid fa-trash"></i></button>
               </div>
             </td>
           `;
@@ -813,22 +890,23 @@
       }
 
       if (total === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">No records found in database.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">No records found.</td></tr>`;
       }
 
-      document.getElementById('statTotalUsers').innerText = total;
+      document.getElementById('statTotal').innerText = total;
       document.getElementById('statStudents').innerText = students;
-      document.getElementById('statTeachers').innerText = teachers;
       document.getElementById('statFirestore').innerText = firestoreCount;
+      document.getElementById('statRTDB').innerText = rtdbCount;
     }
 
-    // Filter Listeners
-    document.getElementById('searchInput').addEventListener('input', renderTableAndStats);
-    document.getElementById('roleFilter').addEventListener('change', renderTableAndStats);
-    document.getElementById('sourceFilter').addEventListener('change', renderTableAndStats);
+    // Input Search & Filters
+    document.getElementById('searchInput').addEventListener('input', renderDataView);
+    document.getElementById('roleFilter').addEventListener('change', renderDataView);
+    document.getElementById('sourceFilter').addEventListener('change', renderDataView);
 
-    // Edit Modal Logic
+    // Edit Modal Dialog Logic
     window.openEditModal = function(key) {
+      triggerHaptic();
       const u = mergedUserData[key];
       if (!u) return;
 
@@ -839,8 +917,6 @@
       document.getElementById('editEmail').value = u.email || '';
       document.getElementById('editRole').value = u.role || 'student';
       document.getElementById('editStatus').value = u.status || 'active';
-      document.getElementById('editClass').value = u.studentClass || '';
-      document.getElementById('editBatch').value = u.subject || '';
 
       document.getElementById('editModal').classList.add('active');
     };
@@ -849,68 +925,70 @@
       document.getElementById('editModal').classList.remove('active');
     };
 
-    // Save Changes Handler
+    // Save Edit Form
     document.getElementById('editUserForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      triggerHaptic();
+
       const rawId = document.getElementById('editUserId').value;
       const source = document.getElementById('editUserSource').value;
 
-      const updateData = {
+      const payload = {
         fullName: document.getElementById('editFullName').value.trim(),
         mobile: document.getElementById('editMobile').value.trim(),
         email: document.getElementById('editEmail').value.trim(),
         role: document.getElementById('editRole').value,
-        status: document.getElementById('editStatus').value,
-        studentClass: document.getElementById('editClass').value.trim(),
-        subject: document.getElementById('editBatch').value.trim()
+        status: document.getElementById('editStatus').value
       };
 
       try {
         if (source === 'firestore') {
-          await updateDoc(doc(fsdb, "users", rawId), updateData);
+          await updateDoc(doc(fsdb, "users", rawId), payload);
         } else {
-          await rtdbUpdate(ref(rtdb, `users/${rawId}`), updateData);
+          await rtdbUpdate(ref(rtdb, `users/${rawId}`), payload);
         }
-        showToast(`Record updated in ${source.toUpperCase()}`);
+        showToast("Record updated successfully!");
         closeEditModal();
       } catch (err) {
-        showToast("Update error: " + err.message, false);
+        showToast("Update Error: " + err.message, false);
       }
     });
 
-    // Block/Unblock Handler
-    window.toggleBlockUser = async function(key) {
+    // Block User Action
+    window.toggleBlock = async function(key) {
+      triggerHaptic();
       const u = mergedUserData[key];
       if (!u) return;
-      const newStatus = u.status === 'active' ? 'blocked' : 'active';
 
+      const newStatus = u.status === 'active' ? 'blocked' : 'active';
       try {
         if (u.source === 'firestore') {
           await updateDoc(doc(fsdb, "users", u.rawId), { status: newStatus });
         } else {
           await rtdbUpdate(ref(rtdb, `users/${u.rawId}`), { status: newStatus });
         }
-        showToast(`User status set to ${newStatus.toUpperCase()}`);
+        showToast(`User marked as ${newStatus.toUpperCase()}`);
       } catch (err) {
-        showToast('Block/Unblock Failed: ' + err.message, false);
+        showToast("Status Error: " + err.message, false);
       }
     };
 
-    // Delete Record Handler
-    window.deleteUserRecord = async function(key) {
+    // Delete Record Action
+    window.deleteUser = async function(key) {
+      triggerHaptic();
       const u = mergedUserData[key];
       if (!u) return;
 
-      if (confirm(`Are you sure you want to delete this record from ${u.source.toUpperCase()}?`)) {
+      if (confirm(`Permanently delete user record from ${u.source.toUpperCase()}?`)) {
         try {
           if (u.source === 'firestore') {
             await deleteDoc(doc(fsdb, "users", u.rawId));
           } else {
             await rtdbRemove(ref(rtdb, `users/${u.rawId}`));
           }
-          showToast('User record deleted successfully');
+          showToast("User record deleted!");
         } catch (err) {
-          showToast('Delete Failed: ' + err.message, false);
+          showToast("Delete Error: " + err.message, false);
         }
       }
     };
