@@ -72,47 +72,60 @@
     }
 
     /* ==========================================================================
-       2. TOP CENTER TOAST NOTIFICATION
+       2. ANDROID WEBVIEW NOTCH SAFE TOP CENTER TOAST NOTIFICATION
        ========================================================================== */
     .toast-container-center {
       position: fixed;
-      top: 20px;
+      top: max(16px, env(safe-area-inset-top)); /* Mobile Notch & Status bar Fix */
       left: 50%;
       transform: translateX(-50%);
-      z-index: 9999;
-      width: 90%;
-      max-width: 400px;
+      z-index: 99999;
+      width: 92%;
+      max-width: 380px;
       pointer-events: none;
     }
 
     .toast-msg {
       pointer-events: auto;
-      background: var(--primary-gradient);
+      background: var(--indigo-dark);
       color: #ffffff;
-      padding: 14px 20px;
+      padding: 12px 18px;
       border-radius: var(--radius-md);
-      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.3);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
       font-family: var(--font-heading);
       font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.2px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      animation: slideDownCenter 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      animation: slideDownSmooth 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .toast-msg.success {
+      background: var(--primary-gradient);
+      box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
     }
 
     .toast-msg.error {
       background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-      box-shadow: 0 12px 30px rgba(220, 38, 38, 0.35);
+      box-shadow: 0 10px 25px rgba(220, 38, 38, 0.35);
     }
 
-    @keyframes slideDownCenter {
-      from { opacity: 0; transform: translate(-50%, -30px); }
-      to { opacity: 1; transform: translate(-50%, 0); }
+    .toast-msg.fade-out {
+      animation: fadeOutUp 0.35s cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    @keyframes slideDownSmooth {
+      from { opacity: 0; transform: translateY(-25px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes fadeOutUp {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to { opacity: 0; transform: translateY(-20px) scale(0.95); }
     }
 
     /* ==========================================================================
@@ -159,7 +172,10 @@
       color: var(--indigo-dark);
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+      transition: all 0.2s ease;
     }
+
+    .lang-selector:active { transform: scale(0.96); }
 
     .lang-dropdown {
       position: absolute;
@@ -177,7 +193,9 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    .lang-dropdown.show { display: block; }
+    .lang-dropdown.show { display: block; animation: fadeIn 0.2s ease-out; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
     .lang-option {
       padding: 12px 14px;
@@ -280,8 +298,8 @@
     }
 
     .hero-illustration {
-      width: 120px;
-      height: 110px;
+      width: 110px;
+      height: 100px;
       flex-shrink: 0;
     }
 
@@ -456,7 +474,7 @@
       gap: 10px;
       cursor: pointer;
       box-shadow: var(--shadow-glow);
-      transition: transform 0.1s ease;
+      transition: transform 0.15s ease, opacity 0.2s ease;
     }
 
     .btn-submit:active { transform: scale(0.98); }
@@ -470,67 +488,29 @@
     .divider-line { flex: 1; height: 1px; background: #e2e8f0; }
     .divider-text { padding: 0 10px; font-size: 11px; font-weight: 700; color: #94a3b8; }
 
-    .social-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .btn-social {
-      height: 46px;
+    /* FULL WIDTH SINGLE GOOGLE BUTTON (NO OTP BUTTON) */
+    .btn-google-full {
+      width: 100%;
+      height: 48px;
       background: #ffffff;
       border: 1.5px solid var(--border-color);
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      font-size: 12px;
+      gap: 10px;
+      font-size: 13px;
       font-weight: 700;
       color: var(--indigo-dark);
       cursor: pointer;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+      transition: transform 0.15s ease, background 0.2s ease;
     }
 
-    .btn-social:active {
+    .btn-google-full:active {
       background: var(--input-bg);
       transform: scale(0.98);
     }
-
-    /* ==========================================================================
-       7. OTP BOTTOM SHEET MODAL (ANDROID WEBVIEW OPTIMIZED)
-       ========================================================================== */
-    .otp-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(6px);
-      z-index: 9000;
-      display: none;
-      align-items: flex-end;
-      justify-content: center;
-    }
-
-    .otp-modal-overlay.active { display: flex; }
-
-    .otp-modal-card {
-      width: 100%;
-      max-width: 440px;
-      background: #ffffff;
-      border-radius: 24px 24px 0 0;
-      padding: 24px;
-      box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
-      animation: slideUpModal 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes slideUpModal { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-    .otp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .otp-title { font-family: var(--font-heading); font-size: 16px; font-weight: 800; color: var(--indigo-dark); }
-    .btn-close-modal { width: 32px; height: 32px; border-radius: 50%; background: #f1f5f9; border: none; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-
-    .otp-inputs-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin: 20px 0; }
-    .otp-box { height: 50px; border: 2px solid #e2e8f0; border-radius: 10px; text-align: center; font-size: 18px; font-weight: 800; color: var(--indigo-dark); outline: none; background: #f8fafc; }
-    .otp-box:focus { border-color: var(--primary-color); background: #ffffff; }
 
     .register-footer-link {
       text-align: center;
@@ -549,7 +529,7 @@
 </head>
 <body>
 
-  <!-- Top Center Toast Notification Slot -->
+  <!-- Android Notch Safe Top Center Toast Notification Slot -->
   <div class="toast-container-center" id="toastContainer"></div>
 
   <div class="app-screen">
@@ -595,7 +575,7 @@
         </div>
         
         <h1 class="main-heading">Welcome <span>Back!</span></h1>
-        <p class="main-subheading">Sign in with Mobile or Email ID to access your dashboard.</p>
+        <p class="main-subheading">Sign in with Email ID to access your account.</p>
       </div>
 
       <!-- Hero Illustration -->
@@ -647,7 +627,7 @@
         </div>
         <div>
           <div class="section-title">Account Login</div>
-          <div class="section-subtitle">Enter your Email and Password</div>
+          <div class="section-subtitle">Enter registered Email and Password</div>
         </div>
       </div>
 
@@ -690,21 +670,15 @@
       <!-- Social Login Separator -->
       <div class="divider-box">
         <div class="divider-line"></div>
-        <div class="divider-text">OR SIGN IN WITH</div>
+        <div class="divider-text">OR CONTINUE WITH</div>
         <div class="divider-line"></div>
       </div>
 
-      <!-- Social Buttons -->
-      <div class="social-grid">
-        <button class="btn-social" id="btnOtpTrigger" type="button">
-          <i class="fa-solid fa-mobile-screen-button" style="color: #2563eb; font-size: 16px;"></i>
-          <span>OTP Login</span>
-        </button>
-        <button class="btn-social" id="btnGoogleLogin" type="button">
-          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-          <span>Google</span>
-        </button>
-      </div>
+      <!-- Full-Width Google Button (OTP Removed) -->
+      <button class="btn-google-full" id="btnGoogleLogin" type="button">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+        <span>Sign in with Google</span>
+      </button>
 
       <!-- Link to Register Page -->
       <div class="register-footer-link">
@@ -715,51 +689,32 @@
 
   </div>
 
-  <!-- 6-DIGIT OTP FOOTER MODAL SHEET -->
-  <div class="otp-modal-overlay" id="otpModal">
-    <div class="otp-modal-card">
-      <div class="otp-header">
-        <div class="otp-title"><i class="fa-solid fa-shield-halved" style="color: var(--primary-color);"></i> Verify 6-Digit OTP</div>
-        <button class="btn-close-modal" id="btnCloseOtp">✕</button>
-      </div>
-      
-      <p style="font-size: 12px; color: var(--text-muted);" id="otpSubText">Enter 6-digit OTP sent to your registered email.</p>
-
-      <div class="otp-inputs-grid">
-        <input type="text" maxlength="1" class="otp-box" />
-        <input type="text" maxlength="1" class="otp-box" />
-        <input type="text" maxlength="1" class="otp-box" />
-        <input type="text" maxlength="1" class="otp-box" />
-        <input type="text" maxlength="1" class="otp-box" />
-        <input type="text" maxlength="1" class="otp-box" />
-      </div>
-
-      <button class="btn-submit" id="btnVerifyOtp">Verify & Continue</button>
-    </div>
-  </div>
-
   <!-- FIREBASE CLOUD FIRESTORE INTEGRATION -->
   <script type="module">
     import { auth, db } from "./firebase.js";
     import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Top Center Toast Notification System
+    // Optimized WebView Toast Notification Engine (3 Seconds Auto-Hide)
+    let toastTimeout = null;
     window.showCenterToast = function(message, isSuccess = true) {
       const container = document.getElementById('toastContainer');
       container.innerHTML = "";
+      if (toastTimeout) clearTimeout(toastTimeout);
 
       const toast = document.createElement('div');
-      toast.className = `toast-msg ${isSuccess ? '' : 'error'}`;
-      toast.innerHTML = `<i class="fa-solid ${isSuccess ? 'fa-circle-check' : 'fa-triangle-exclamation'}"></i> ${message}`;
+      toast.className = `toast-msg ${isSuccess ? 'success' : 'error'}`;
+      toast.innerHTML = `<i class="fa-solid ${isSuccess ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> <span>${message}</span>`;
       
       container.appendChild(toast);
 
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.3s ease';
-        setTimeout(() => toast.remove(), 300);
-      }, 3500);
+      // Auto Hide Exact After 3 Seconds (3000ms)
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('fade-out');
+        setTimeout(() => {
+          if (toast.parentNode) toast.remove();
+        }, 350);
+      }, 3000);
     };
 
     // Password Toggle
@@ -788,10 +743,10 @@
     window.changeLanguage = function(code, name) {
       document.getElementById('currentLangText').innerText = name;
       langDropdown.classList.remove('show');
-      showCenterToast(`Language changed to ${name}`);
+      showCenterToast(`Language updated to ${name}`, true);
     };
 
-    // Role-Based Redirection Engine
+    // Dynamic Role-Based Redirect Engine
     async function redirectByUserRole(uid) {
       try {
         const userDocRef = doc(db, "users", uid);
@@ -802,11 +757,11 @@
           const userRole = userData.role || 'student';
 
           if (userData.status === 'blocked') {
-            showCenterToast("Your account is blocked by Admin.", false);
+            showCenterToast("Account is blocked. Contact Admin.", false);
             return;
           }
 
-          showCenterToast(`Login Successful! Redirecting...`, true);
+          showCenterToast(`Login Successful! Accessing Dashboard...`, true);
 
           setTimeout(() => {
             if (userRole === 'student') window.location.href = 'student-dashboard.html';
@@ -816,7 +771,7 @@
           }, 1200);
 
         } else {
-          showCenterToast("User profile not found in Database!", false);
+          showCenterToast("User details not found in Database!", false);
         }
       } catch (err) {
         showCenterToast(err.message, false);
@@ -842,68 +797,28 @@
       }
     });
 
-    // OTP Modal Trigger
-    document.getElementById('btnOtpTrigger').addEventListener('click', () => {
-      const email = document.getElementById('loginEmail').value.trim();
-      if (!email) {
-        showCenterToast("Please enter Email ID first!", false);
-        return;
-      }
-      showCenterToast(`6-Digit OTP sent to ${email}`);
-      document.getElementById('otpSubText').innerText = `OTP sent to: ${email}`;
-      document.getElementById('otpModal').classList.add('active');
-    });
-
-    document.getElementById('btnCloseOtp').addEventListener('click', () => {
-      document.getElementById('otpModal').classList.remove('active');
-    });
-
-    const boxes = document.querySelectorAll('.otp-box');
-    boxes.forEach((box, idx) => {
-      box.addEventListener('keyup', (e) => {
-        if (box.value.length === 1 && idx < 5) boxes[idx + 1].focus();
-      });
-    });
-
-    document.getElementById('btnVerifyOtp').addEventListener('click', () => {
-      let otpVal = "";
-      boxes.forEach(b => otpVal += b.value);
-      if (otpVal.length < 6) {
-        showCenterToast("Enter full 6-digit OTP", false);
-        return;
-      }
-      document.getElementById('otpModal').classList.remove('active');
-      
-      if(auth.currentUser) {
-        redirectByUserRole(auth.currentUser.uid);
-      } else {
-        showCenterToast("OTP Verified! Redirecting...");
-        setTimeout(() => { window.location.href = "student-dashboard.html"; }, 1200);
-      }
-    });
-
-    // Forgot Password Link
+    // Forgot Password Trigger
     document.getElementById('btnForgotPass').addEventListener('click', async (e) => {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value.trim();
       if (!email || !email.includes('@')) {
-        showCenterToast('Enter a valid Email ID to reset password', false);
+        showCenterToast('Enter valid Email ID first!', false);
         return;
       }
       try {
         await sendPasswordResetEmail(auth, email);
-        showCenterToast('Password reset link sent to your email!');
+        showCenterToast('Password reset email link sent!', true);
       } catch (err) {
         showCenterToast(err.message, false);
       }
     });
 
-    // Google Sign in
+    // Google Sign In
     document.getElementById('btnGoogleLogin').addEventListener('click', async () => {
       try {
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
-        showCenterToast(`Welcome ${result.user.displayName}!`);
+        showCenterToast(`Welcome ${result.user.displayName}!`, true);
         await redirectByUserRole(result.user.uid);
       } catch (err) {
         showCenterToast(err.message, false);
