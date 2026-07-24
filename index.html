@@ -10,9 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ==========================================================================
-       1. ADVANCED BLUE-PURPLE WHITE LIGHT THEME (ANDROID WEBVIEW OPTIMIZED)
-       ========================================================================== */
     :root {
       --primary-gradient: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
       --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
@@ -71,9 +68,7 @@
       position: relative;
     }
 
-    /* ==========================================================================
-       2. TOP CENTER TOAST NOTIFICATION
-       ========================================================================== */
+    /* Top Toast Notification */
     .toast-container-center {
       position: fixed;
       top: 20px;
@@ -115,9 +110,7 @@
       to { opacity: 1; transform: translate(-50%, 0); }
     }
 
-    /* ==========================================================================
-       3. TOP NAVIGATION & LANGUAGE SELECTOR
-       ========================================================================== */
+    /* Top Nav */
     .top-nav {
       display: flex;
       justify-content: space-between;
@@ -174,7 +167,6 @@
       box-shadow: 0 15px 35px rgba(15, 23, 42, 0.15);
       display: none;
       z-index: 100;
-      -webkit-overflow-scrolling: touch;
     }
 
     .lang-dropdown.show { display: block; }
@@ -191,14 +183,12 @@
       border-bottom: 1px solid #f1f5f9;
     }
 
-    .lang-option:hover, .lang-option:active {
+    .lang-option:hover {
       background: var(--blue-light);
       color: var(--primary-color);
     }
 
-    /* ==========================================================================
-       4. HERO BANNER WITH LOGO & HEADING
-       ========================================================================== */
+    /* Hero Banner */
     .hero-section {
       display: flex;
       justify-content: space-between;
@@ -305,9 +295,7 @@
       flex-shrink: 0;
     }
 
-    /* ==========================================================================
-       5. TRUST BADGES
-       ========================================================================== */
+    /* Trust Badges */
     .trust-badges-card {
       background: var(--blue-light);
       border-radius: var(--radius-md);
@@ -349,9 +337,7 @@
       color: var(--text-muted);
     }
 
-    /* ==========================================================================
-       6. FORM CARD & INPUTS
-       ========================================================================== */
+    /* Form Card */
     .form-card {
       background: var(--card-bg);
       border-radius: var(--radius-lg);
@@ -452,9 +438,7 @@
       transition: all 0.3s ease;
     }
 
-    /* ==========================================================================
-       7. ROLE SELECTION
-       ========================================================================== */
+    /* Role Grid */
     .role-section-label {
       font-family: var(--font-heading);
       font-size: 12px;
@@ -521,9 +505,7 @@
       border-color: var(--primary-color);
     }
 
-    /* ==========================================================================
-       8. BUTTONS & FOOTER
-       ========================================================================== */
+    /* Buttons & Footer */
     .terms-wrapper {
       display: flex;
       align-items: center;
@@ -616,12 +598,12 @@
 </head>
 <body>
 
-  <!-- Top Center Toast Notification Slot -->
+  <!-- Toast Slot -->
   <div class="toast-container-center" id="toastContainer"></div>
 
   <div class="app-screen">
     
-    <!-- Top Nav with Languages -->
+    <!-- Top Navigation -->
     <div class="top-nav">
       <button class="btn-icon-back" onclick="window.history.back()"><i class="fa-solid fa-arrow-left"></i></button>
 
@@ -636,24 +618,14 @@
           <div class="lang-option" onclick="changeLanguage('hi', 'हिंदी')">हिंदी (Hindi) <span>HI</span></div>
           <div class="lang-option" onclick="changeLanguage('mr', 'मराठी')">मराठी (Marathi) <span>MR</span></div>
           <div class="lang-option" onclick="changeLanguage('gu', 'ગુજરાતી')">ગુજરાતી (Gujarati) <span>GU</span></div>
-          <div class="lang-option" onclick="changeLanguage('bn', 'বাংলা')">বাংলা (Bengali) <span>BN</span></div>
-          <div class="lang-option" onclick="changeLanguage('ta', 'தமிழ்')">தமிழ் (Tamil) <span>TA</span></div>
-          <div class="lang-option" onclick="changeLanguage('te', 'తెలుగు')">తెలుగు (Telugu) <span>TE</span></div>
-          <div class="lang-option" onclick="changeLanguage('kn', 'ಕನ್ನಡ')">ಕನ್ನಡ (Kannada) <span>KN</span></div>
-          <div class="lang-option" onclick="changeLanguage('pa', 'ਪੰਜਾਬੀ')">ਪੰਜਾਬੀ (Punjabi) <span>PA</span></div>
-          <div class="lang-option" onclick="changeLanguage('ur', 'اردو')">اردو (Urdu) <span>UR</span></div>
-          <div class="lang-option" onclick="changeLanguage('bho', 'भोजपुरी')">भोजपुरी (Bhojpuri) <span>BHO</span></div>
-          <div class="lang-option" onclick="changeLanguage('or', 'ଓଡ଼ିଆ')">ଓଡ଼ିଆ (Odia) <span>OR</span></div>
         </div>
       </div>
     </div>
 
-    <!-- Hero Header with Logo Attachment -->
+    <!-- Hero Section -->
     <div class="hero-section">
       <div class="hero-content">
         <div class="brand-header">
-          
-          <!-- Circle Profile Logo Container -->
           <div class="circle-logo-container">
             <div class="brand-logo-icon">
               <img id="circleAvatarPreview" src="logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/150/2563eb/ffffff?text=DWC'" />
@@ -665,16 +637,15 @@
           </div>
 
           <div>
-            <div class="brand-title" id="txtTitle">DWC STUDY</div>
-            <div class="brand-tagline" id="txtTagline">Dream. Work. Conquer.</div>
+            <div class="brand-title">DWC STUDY</div>
+            <div class="brand-tagline">Dream. Work. Conquer.</div>
           </div>
         </div>
         
-        <h1 class="main-heading" id="txtMainHeading">Create <span>Your Account</span></h1>
-        <p class="main-subheading" id="txtSubHeading">Join millions of learners and start your learning journey today.</p>
+        <h1 class="main-heading">Create <span>Your Account</span></h1>
+        <p class="main-subheading">Join millions of learners and start your learning journey today.</p>
       </div>
 
-      <!-- Hero Illustration -->
       <div class="hero-illustration">
         <svg viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
           <circle cx="100" cy="90" r="70" fill="#EFF6FF" />
@@ -687,40 +658,40 @@
       </div>
     </div>
 
-    <!-- Trust Badges Strip -->
+    <!-- Trust Badges -->
     <div class="trust-badges-card">
       <div class="badge-item">
         <div class="badge-icon"><i class="fa-solid fa-shield-halved"></i></div>
         <div>
-          <div class="badge-text-title" id="badgeTitle1">Secure</div>
-          <div class="badge-text-sub" id="badgeSub1">Data Protected</div>
+          <div class="badge-text-title">Secure</div>
+          <div class="badge-text-sub">Data Protected</div>
         </div>
       </div>
 
       <div class="badge-item">
         <div class="badge-icon"><i class="fa-solid fa-bolt"></i></div>
         <div>
-          <div class="badge-text-title" id="badgeTitle2">Quick</div>
-          <div class="badge-text-sub" id="badgeSub2">Instant Access</div>
+          <div class="badge-text-title">Quick</div>
+          <div class="badge-text-sub">Instant Access</div>
         </div>
       </div>
 
       <div class="badge-item">
         <div class="badge-icon"><i class="fa-solid fa-award"></i></div>
         <div>
-          <div class="badge-text-title" id="badgeTitle3">Trusted</div>
-          <div class="badge-text-sub" id="badgeSub3">1M+ Learners</div>
+          <div class="badge-text-title">Trusted</div>
+          <div class="badge-text-sub">1M+ Learners</div>
         </div>
       </div>
     </div>
 
-    <!-- Registration Form Card -->
+    <!-- Form Section -->
     <div class="form-card">
       <div class="section-header">
         <div class="section-icon-badge"><i class="fa-solid fa-user-plus"></i></div>
         <div>
-          <div class="section-title" id="secTitle">Personal Information</div>
-          <div class="section-subtitle" id="secSubTitle">Fill in your basic details to get started</div>
+          <div class="section-title">Personal Information</div>
+          <div class="section-subtitle">Fill in your basic details to get started</div>
         </div>
       </div>
 
@@ -769,7 +740,7 @@
 
         <div class="role-section-label">
           <i class="fa-solid fa-users"></i>
-          <span id="lblRole">I am a</span>
+          <span>I am a</span>
         </div>
 
         <div class="role-grid">
@@ -777,27 +748,27 @@
             <input type="radio" name="userRole" value="student" checked />
             <div class="check-badge"><i class="fa-solid fa-check"></i></div>
             <i class="fa-solid fa-graduation-cap role-icon"></i>
-            <span class="role-name" id="roleStudent">Student</span>
+            <span class="role-name">Student</span>
           </label>
 
           <label class="role-card" onclick="selectRole(this)">
             <input type="radio" name="userRole" value="teacher" />
             <div class="check-badge"><i class="fa-solid fa-check"></i></div>
             <i class="fa-solid fa-chalkboard-user role-icon"></i>
-            <span class="role-name" id="roleTeacher">Teacher</span>
+            <span class="role-name">Teacher</span>
           </label>
 
           <label class="role-card" onclick="selectRole(this)">
             <input type="radio" name="userRole" value="other" />
             <div class="check-badge"><i class="fa-solid fa-check"></i></div>
             <i class="fa-solid fa-users-gear role-icon"></i>
-            <span class="role-name" id="roleOther">Other</span>
+            <span class="role-name">Other</span>
           </label>
         </div>
 
         <div class="terms-wrapper">
           <input type="checkbox" id="termsCheck" class="custom-checkbox" required />
-          <label for="termsCheck" class="terms-text" id="lblTerms">
+          <label for="termsCheck" class="terms-text">
             I agree to the <a href="#">Terms of Service</a> & <a href="#">Privacy Policy</a>
           </label>
         </div>
@@ -810,7 +781,7 @@
 
       <div class="divider-box">
         <div class="divider-line"></div>
-        <span class="divider-text" id="txtOr">OR</span>
+        <span class="divider-text">OR</span>
         <div class="divider-line"></div>
       </div>
 
@@ -826,28 +797,25 @@
         </button>
       </div>
 
-      <!-- Login Redirect Link -->
       <div class="login-footer-link">
-        <span id="txtHaveAccount">Already have an account?</span> 
-        <a href="login.html" id="linkLogin">Login</a>
+        <span>Already have an account?</span> 
+        <a href="login.html">Login</a>
       </div>
 
     </div>
   </div>
 
-  <!-- FIREBASE & FIRESTORE INTEGRATION MODULE -->
+  <!-- FIREBASE SCRIPT -->
   <script type="module">
-    // Aapki Apni Config File Import
     import { auth, db } from "./firebase.js";
     import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     let profileImageData = "";
 
-    // TOP CENTER TOAST NOTIFICATION FUNCTION
     function showCenterToast(message, isSuccess = true) {
       const container = document.getElementById('toastContainer');
-      container.innerHTML = ""; // Clear existing
+      container.innerHTML = "";
 
       const toast = document.createElement('div');
       toast.className = `toast-msg ${isSuccess ? '' : 'error'}`;
@@ -862,7 +830,6 @@
       }, 3500);
     }
 
-    // Profile Image Base64 Convert
     const imageUploadInput = document.getElementById('imageUploadInput');
     const circleAvatarPreview = document.getElementById('circleAvatarPreview');
 
@@ -883,7 +850,6 @@
       }
     });
 
-    // Form Submit Handler (FIRESTORE INTEGRATION)
     const registerForm = document.getElementById('registerForm');
     const btnSubmitText = document.getElementById('btnSubmitText');
 
@@ -906,38 +872,29 @@
       try {
         btnSubmitText.textContent = "Processing...";
 
-        // 1. Firebase Authentication
+        // 1. Create User Auth
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // 2. Firestore Document Entry with Role
+        // 2. Save complete details in Firestore Document (with Selected Type/Role)
         await setDoc(doc(db, "users", user.uid), {
           uid: user.uid,
           fullName: fullName,
           userName: userName,
           email: email,
           mobile: mobile,
-          role: role, // 'student', 'teacher', ya 'other'
+          role: role, // Saves 'student', 'teacher', or 'other'
           profileImage: profileImageData || "logo.png",
+          status: "active",
           createdAt: new Date().toISOString()
         });
 
-        // Top Center Success Toast
-        showCenterToast("Registration Successful! Redirecting...", true);
-        btnSubmitText.textContent = "Registered!";
+        showCenterToast("Registration Successful! Redirecting to Login...", true);
 
-        // Role-Based Redirection System
+        // 3. Directly Redirect to Login Page
         setTimeout(() => {
-          if (role === "student") {
-            window.location.href = "student-dashboard.html";
-          } else if (role === "teacher") {
-            window.location.href = "teacher-dashboard.html";
-          } else if (role === "other") {
-            window.location.href = "other-dashboard.html";
-          } else {
-            window.location.href = "login.html";
-          }
-        }, 1800);
+          window.location.href = "login.html";
+        }, 1500);
 
       } catch (error) {
         showCenterToast(error.message, false);
@@ -945,14 +902,13 @@
       }
     });
 
-    // Google Sign in (With Firestore Auto-Role Entry)
+    // Google Sign in (Auto Saves Role & Redirects to Login)
     document.getElementById('btnGoogleLogin').addEventListener('click', async () => {
       try {
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
 
-        // Default Student role for Google Login if not selected
         const role = document.querySelector('input[name="userRole"]:checked')?.value || "student";
 
         await setDoc(doc(db, "users", user.uid), {
@@ -963,10 +919,11 @@
           mobile: user.phoneNumber || "",
           role: role,
           profileImage: user.photoURL || "logo.png",
+          status: "active",
           createdAt: new Date().toISOString()
         }, { merge: true });
 
-        showCenterToast(`Welcome ${user.displayName}! Redirecting...`, true);
+        showCenterToast(`Registered successfully! Please login.`, true);
         setTimeout(() => {
           window.location.href = "login.html";
         }, 1500);
@@ -984,7 +941,6 @@
       element.querySelector('input[type="radio"]').checked = true;
     }
 
-    // Password Strength Meter
     document.getElementById('password').addEventListener('input', (e) => {
       const val = e.target.value;
       let score = 0;
@@ -999,7 +955,6 @@
       else bar.style.background = '#10b981';
     });
 
-    // Multi-Language Selector Dropdown Handler
     const langSelectorBtn = document.getElementById('langSelectorBtn');
     const langDropdown = document.getElementById('langDropdown');
 

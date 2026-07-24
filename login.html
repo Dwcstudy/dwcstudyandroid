@@ -647,17 +647,17 @@
         </div>
         <div>
           <div class="section-title">Account Login</div>
-          <div class="section-subtitle">Enter your Mobile/Email and Password</div>
+          <div class="section-subtitle">Enter your Email and Password</div>
         </div>
       </div>
 
       <form id="loginForm">
         
-        <!-- Mobile or Email Field -->
+        <!-- Email Field -->
         <div class="form-group">
           <div class="input-wrapper">
-            <i class="fa-solid fa-user leading-icon"></i>
-            <input type="text" id="loginUserInput" placeholder="Mobile Number or Email ID" required />
+            <i class="fa-solid fa-envelope leading-icon"></i>
+            <input type="email" id="loginEmail" placeholder="Email Address" required />
           </div>
         </div>
 
@@ -708,7 +708,7 @@
 
       <!-- Link to Register Page -->
       <div class="register-footer-link">
-        Don't have an account? <a href="registration.html">Register Now</a>
+        Don't have an account? <a href="register.html">Register Now</a>
       </div>
 
     </div>
@@ -723,7 +723,7 @@
         <button class="btn-close-modal" id="btnCloseOtp">✕</button>
       </div>
       
-      <p style="font-size: 12px; color: var(--text-muted);" id="otpSubText">Enter 6-digit OTP sent to your registered mobile/email.</p>
+      <p style="font-size: 12px; color: var(--text-muted);" id="otpSubText">Enter 6-digit OTP sent to your registered email.</p>
 
       <div class="otp-inputs-grid">
         <input type="text" maxlength="1" class="otp-box" />
@@ -738,26 +738,11 @@
     </div>
   </div>
 
-  <!-- FIREBASE & DATABASE INTEGRATION ENGINE -->
+  <!-- FIREBASE CLOUD FIRESTORE INTEGRATION -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-    // Firebase Config
-    const firebaseConfig = {
-      apiKey: "AIzaSyAHw2ceBKirLjpBx0soxJD0GHWwXnrxo4Y",
-      authDomain: "thar-e5879.firebaseapp.com",
-      databaseURL: "https://thar-e5879-default-rtdb.firebaseio.com",
-      projectId: "thar-e5879",
-      storageBucket: "thar-e5879.firebasestorage.app",
-      messagingSenderId: "1004657134263",
-      appId: "1:1004657134263:web:a2d8844554000981659b32"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth(app);
+    import { auth, db } from "./firebase.js";
+    import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     // Top Center Toast Notification System
     window.showCenterToast = function(message, isSuccess = true) {
@@ -806,78 +791,66 @@
       showCenterToast(`Language changed to ${name}`);
     };
 
-    // Role-Based Redirection System
-    function redirectByRole(role) {
-      showCenterToast(`Verification Successful! Redirecting...`, true);
-      setTimeout(() => {
-        if (role === 'student') window.location.href = 'student-dashboard.html';
-        else if (role === 'teacher') window.location.href = 'teacher-dashboard.html';
-        else if (role === 'other') window.location.href = 'other-dashboard.html';
-        else window.location.href = 'student-dashboard.html';
-      }, 1500);
+    // Role-Based Redirection Engine
+    async function redirectByUserRole(uid) {
+      try {
+        const userDocRef = doc(db, "users", uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (userDocSnap.exists()) {
+          const userData = userDocSnap.data();
+          const userRole = userData.role || 'student';
+
+          if (userData.status === 'blocked') {
+            showCenterToast("Your account is blocked by Admin.", false);
+            return;
+          }
+
+          showCenterToast(`Login Successful! Redirecting...`, true);
+
+          setTimeout(() => {
+            if (userRole === 'student') window.location.href = 'student-dashboard.html';
+            else if (userRole === 'teacher') window.location.href = 'teacher-dashboard.html';
+            else if (userRole === 'other') window.location.href = 'other-dashboard.html';
+            else window.location.href = 'student-dashboard.html';
+          }, 1200);
+
+        } else {
+          showCenterToast("User profile not found in Database!", false);
+        }
+      } catch (err) {
+        showCenterToast(err.message, false);
+      }
     }
 
     // Login Form Submission
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
-      const userInput = document.getElementById('loginUserInput').value.trim();
-      const pass = document.getElementById('loginPassword').value.trim();
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPassword').value;
       const btnText = document.getElementById('btnLoginText');
 
       btnText.innerText = "Verifying...";
 
       try {
-        const dbRef = ref(db);
-        const snapshot = await get(child(dbRef, `users`));
-
-        if (snapshot.exists()) {
-          const users = snapshot.val();
-          let matchedUser = null;
-
-          for (let key in users) {
-            const user = users[key];
-            const dbMobile = user.mobile ? String(user.mobile).trim() : "";
-            const dbEmail = user.email ? String(user.email).trim().toLowerCase() : "";
-            const dbKey = String(key).trim();
-
-            if (dbKey === userInput || dbMobile === userInput || (dbEmail && dbEmail === userInput.toLowerCase())) {
-              matchedUser = user;
-              break;
-            }
-          }
-
-          if (matchedUser) {
-            const dbPassword = String(matchedUser.password || '').trim();
-            if (dbPassword === pass) {
-              redirectByRole(matchedUser.role || 'student');
-            } else {
-              showCenterToast("Incorrect Password!", false);
-              btnText.innerText = "SIGN IN";
-            }
-          } else {
-            showCenterToast("No account found with this details!", false);
-            btnText.innerText = "SIGN IN";
-          }
-        } else {
-          showCenterToast("No user records found!", false);
-          btnText.innerText = "SIGN IN";
-        }
+        const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+        await redirectByUserRole(userCredential.user.uid);
       } catch (err) {
-        showCenterToast(err.message, false);
+        showCenterToast("Invalid email or password!", false);
         btnText.innerText = "SIGN IN";
       }
     });
 
-    // OTP Modal Controls
+    // OTP Modal Trigger
     document.getElementById('btnOtpTrigger').addEventListener('click', () => {
-      const userInput = document.getElementById('loginUserInput').value.trim();
-      if (!userInput) {
-        showCenterToast("Please enter Mobile or Email first!", false);
+      const email = document.getElementById('loginEmail').value.trim();
+      if (!email) {
+        showCenterToast("Please enter Email ID first!", false);
         return;
       }
-      showCenterToast(`6-Digit OTP sent to ${userInput}`);
-      document.getElementById('otpSubText').innerText = `OTP sent to: ${userInput}`;
+      showCenterToast(`6-Digit OTP sent to ${email}`);
+      document.getElementById('otpSubText').innerText = `OTP sent to: ${email}`;
       document.getElementById('otpModal').classList.add('active');
     });
 
@@ -900,19 +873,25 @@
         return;
       }
       document.getElementById('otpModal').classList.remove('active');
-      redirectByRole('student');
+      
+      if(auth.currentUser) {
+        redirectByUserRole(auth.currentUser.uid);
+      } else {
+        showCenterToast("OTP Verified! Redirecting...");
+        setTimeout(() => { window.location.href = "student-dashboard.html"; }, 1200);
+      }
     });
 
     // Forgot Password Link
     document.getElementById('btnForgotPass').addEventListener('click', async (e) => {
       e.preventDefault();
-      const userInput = document.getElementById('loginUserInput').value.trim();
-      if (!userInput || !userInput.includes('@')) {
+      const email = document.getElementById('loginEmail').value.trim();
+      if (!email || !email.includes('@')) {
         showCenterToast('Enter a valid Email ID to reset password', false);
         return;
       }
       try {
-        await sendPasswordResetEmail(auth, userInput);
+        await sendPasswordResetEmail(auth, email);
         showCenterToast('Password reset link sent to your email!');
       } catch (err) {
         showCenterToast(err.message, false);
@@ -925,7 +904,7 @@
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
         showCenterToast(`Welcome ${result.user.displayName}!`);
-        redirectByRole('student');
+        await redirectByUserRole(result.user.uid);
       } catch (err) {
         showCenterToast(err.message, false);
       }
